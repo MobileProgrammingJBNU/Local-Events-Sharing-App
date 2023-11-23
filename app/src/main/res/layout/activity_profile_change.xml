@@ -69,7 +69,7 @@
         android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="나의 아이디"
+        android:text="계정"
         android:textColor="@color/black"
         android:layout_marginLeft="20dp"
         android:textStyle="bold" />
@@ -87,7 +87,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="@color/black"
-        android:text="아이디"
+        android:text="root"
         android:textSize="15sp"
         />
 
