@@ -9,7 +9,6 @@
     tools:context=".Mypage">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -73,7 +72,7 @@
         android:layout_height="99dp">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/temp_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -96,17 +95,16 @@
             tools:progress="36" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/init_temp_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="처음 온도 36.5℃"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintStart_toEndOf="@+id/temp_label"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView11"
             android:layout_width="20dp"
             android:layout_height="17dp"
             android:layout_marginStart="46dp"
@@ -114,14 +112,13 @@
             android:layout_marginBottom="12dp"
             android:text="▼"
             app:layout_constraintBottom_toTopOf="@+id/progressBar"
-            app:layout_constraintEnd_toEndOf="@+id/textView12"
+            app:layout_constraintEnd_toEndOf="@+id/init_temp_label"
             app:layout_constraintHorizontal_bias="0.214"
-            app:layout_constraintStart_toStartOf="@+id/textView12"
-            app:layout_constraintTop_toBottomOf="@+id/textView12"
+            app:layout_constraintStart_toStartOf="@+id/init_temp_label"
+            app:layout_constraintTop_toBottomOf="@+id/init_temp_label"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -151,6 +148,7 @@
         </TableRow>
 
         <TableRow
+            android:id="@+id/view_post_tr"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:clickable="true"
@@ -171,11 +169,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="내가 작성한 글"
+                android:text="내가 작성한 소식"
                 android:textColor="@color/black" />
         </TableRow>
 
         <TableRow
+            android:id="@+id/view_comment_tr"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:layout_marginTop="10dp"
@@ -197,11 +196,12 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="내가 작성한 댓글"
+                android:text="내가 남긴 댓글"
                 android:textColor="@color/black" />
         </TableRow>
 
         <TableRow
+            android:id="@+id/favorites_tr"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:layout_marginTop="10dp"
@@ -228,6 +228,7 @@
         </TableRow>
 
         <TableRow
+            android:id="@+id/logout_tr"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:layout_marginTop="10dp"
