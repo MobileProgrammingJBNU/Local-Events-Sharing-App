@@ -28,7 +28,7 @@ public class ProfileChange extends AppCompatActivity {
      */
     public boolean onCreateOptionsMenu(Menu menu) { // 액티비티가 생성될 때 자동으로 호출.
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.complete_btn, menu);
+        menuInflater.inflate(R.menu.complete_btn, menu); // 완료 버튼 추가
 
         return true;
     }
