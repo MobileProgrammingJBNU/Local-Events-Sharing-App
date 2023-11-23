@@ -53,16 +53,42 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/editTextText"
+        android:id="@+id/nickname_et"
         android:layout_gravity="center_horizontal"
         android:layout_width="320dp"
         android:layout_height="49dp"
         android:background="@drawable/plaintext_rounded_corner"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="닉네임"
+        android:hint="닉네임"
         android:textSize="15sp"
         />
 
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="나의 아이디"
+        android:textColor="@color/black"
+        android:layout_marginLeft="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:id="@+id/id_tv"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="320dp"
+        android:layout_height="49dp"
+        android:background="@drawable/plaintext_rounded_corner"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:text="아이디"
+        android:textSize="15sp"
+        />
 
 </LinearLayout>
