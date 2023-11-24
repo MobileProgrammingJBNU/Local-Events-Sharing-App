@@ -32,7 +32,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:context=".NestedScrollViewActivity">
 
         <LinearLayout
@@ -64,10 +65,10 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/writing_border"
                 android:ems="10"
+                android:hint="제목"
                 android:inputType="text"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
-                android:text="제목"
                 android:textSize="15sp" />
 
             <TextView
@@ -192,27 +193,36 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="등록"
-                    android:textSize="15sp" />
-
             </LinearLayout>
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
 
-
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="등록"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
