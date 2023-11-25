@@ -16,7 +16,7 @@
         android:background="#EEEEEE"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:title="프로필 수정"
+        app:title="프로필"
         app:titleTextAppearance="@style/ToolbarTitleText" />
 
     <View
@@ -37,7 +37,35 @@
             android:layout_width="111dp"
             android:layout_height="111dp"
             android:src="@drawable/user" />
+
     </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="아이디"
+        android:textColor="@color/black"
+        android:layout_marginLeft="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:id="@+id/id_tv"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="320dp"
+        android:layout_height="49dp"
+        android:background="@drawable/textview_rounded_corner"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:text="root"
+        android:textSize="15sp"
+    />
 
     <TextView
         android:layout_marginTop="20dp"
@@ -69,25 +97,24 @@
         android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="계정"
+        android:text="내 소개"
         android:textColor="@color/black"
         android:layout_marginLeft="20dp"
         android:textStyle="bold" />
 
-    <TextView
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+    <EditText
+        android:padding="15dp"
         android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:id="@+id/id_tv"
+        android:id="@+id/selfintro_et"
         android:layout_gravity="center_horizontal"
         android:layout_width="320dp"
-        android:layout_height="49dp"
+        android:layout_height="150dp"
+        android:gravity="top"
         android:background="@drawable/plaintext_rounded_corner"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:textColor="@color/black"
-        android:text="root"
+        android:inputType="textMultiLine"
+        android:scrollHorizontally="false"
+        android:hint="탭 하여 내 소개 추가하기"
         android:textSize="15sp"
         />
 
