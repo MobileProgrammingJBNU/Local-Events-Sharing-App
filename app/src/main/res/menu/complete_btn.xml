@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/toolbar_complete_btn"
-        android:title="완료"
+        android:title="저장"
         app:showAsAction="ifRoom"/>
 </menu>
