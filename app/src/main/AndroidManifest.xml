@@ -25,6 +25,25 @@
             android:exported="true"/>
         <activity android:name=".WritingBoardActivity"
             android:exported="true"/>
+        <activity
+            android:name=".MyFavoritesActivity"
+            android:exported="false"
+            android:parentActivityName=".Mypage" />
+        <activity
+            android:name=".ViewCommentActivity"
+            android:exported="false"
+            android:parentActivityName=".Mypage" />
+        <activity
+            android:name=".ViewPostActivity"
+            android:exported="false"
+            android:parentActivityName=".Mypage" />
+        <activity
+            android:name=".ProfileChange"
+            android:exported="false"
+            android:parentActivityName=".Mypage" />
+        <activity
+            android:name=".Mypage"
+            android:exported="true"/>
     </application>
 
 </manifest>
