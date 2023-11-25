@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color2">
+
+    <!-- 지도를 표시할 레이아웃 -->
+    <FrameLayout
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 우하단에 버튼을 담을 레이아웃 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp">
+
+        <!-- 게시글 작성 버튼 -->
+        <Button
+            android:id="@+id/btnWritePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/color3"
+            android:text="게시글 작성"
+            android:textColor="@color/color4" />  <!-- 버튼 텍스트 색상 -->
+
+        <!-- 마이페이지 버튼 -->
+        <Button
+            android:id="@+id/btnMyPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btnWritePost"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/color1"
+            android:text="마이페이지"
+            android:textColor="@color/color4" />  <!-- 버튼 텍스트 색상 -->
+    </RelativeLayout>
+</RelativeLayout>
+

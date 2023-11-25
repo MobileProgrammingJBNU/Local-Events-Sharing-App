@@ -6,4 +6,5 @@
     </style>
 
     <style name="Theme.MobileProgrammingProject" parent="Base.Theme.MobileProgrammingProject" />
+    <style name="Theme.Project" parent="Base.Theme.MobileProgrammingProject" />
 </resources>
