@@ -13,7 +13,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 
-import com.example.mobileprogrammingproject.databinding.ActivityLoginBinding;
 
 public class Login extends AppCompatActivity {
+ protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_login);
+    }
  }
