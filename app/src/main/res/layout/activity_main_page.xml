@@ -10,39 +10,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- 우하단에 버튼을 담을 레이아웃 -->
-    <RelativeLayout
+    <!-- 하단에 버튼을 담을 가로로 정렬된 레이아웃 -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp">
 
-        <!-- 게시글 작성 버튼 -->
-        <Button
+        <!-- 좌측 버튼: 게시글 작성 -->
+        <ImageButton
             android:id="@+id/btnWritePost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/color3"
-            android:text="게시글 작성"
-            android:textColor="@color/color4" />  <!-- 버튼 텍스트 색상 -->
+            android:layout_marginEnd="55dp"
+            android:backgroundTint="@color/color4"
+            android:src="@drawable/edit" /> <!-- Set your image resource -->
 
-        <!-- 마이페이지 버튼 -->
-        <Button
+        <!-- 중앙 버튼: 마이페이지 -->
+        <ImageButton
             android:id="@+id/btnMyPage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/btnWritePost"
-            android:layout_alignParentEnd="true"
-            android:backgroundTint="@color/color1"
-            android:text="마이페이지"
-            android:textColor="@color/color4" />  <!-- 버튼 텍스트 색상 -->
-    </RelativeLayout>
-</RelativeLayout>
+            android:backgroundTint="@color/color4"
+            android:src="@drawable/account" /> <!-- Set your image resource -->
 
+        <!-- 우측 버튼: 조회 -->
+        <ImageButton
+            android:id="@+id/btnView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="55dp"
+            android:backgroundTint="@color/color4"
+            android:src="@drawable/refresh" /> <!-- Set your image resource -->
+
+    </LinearLayout>
+</RelativeLayout>
