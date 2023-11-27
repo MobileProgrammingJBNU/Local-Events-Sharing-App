@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="55dp"
             android:backgroundTint="@color/color4"
-            android:src="@drawable/edit" /> <!-- Set your image resource -->
+            android:src="@drawable/edit"
+            android:contentDescription="새 글 작성" /> <!-- Set your image resource -->
 
         <!-- 중앙 버튼: 마이페이지 -->
         <ImageButton
@@ -37,7 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/color4"
-            android:src="@drawable/account" /> <!-- Set your image resource -->
+            android:src="@drawable/account"
+            android:contentDescription="마이페이지" /> <!-- Set your image resource -->
 
         <!-- 우측 버튼: 조회 -->
         <ImageButton
@@ -46,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="55dp"
             android:backgroundTint="@color/color4"
-            android:src="@drawable/refresh" /> <!-- Set your image resource -->
+            android:src="@drawable/refresh"
+            android:contentDescription="조회" /> <!-- Set your image resource -->
 
     </LinearLayout>
 </RelativeLayout>

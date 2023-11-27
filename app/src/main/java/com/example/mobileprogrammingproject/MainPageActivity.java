@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 
 import net.daum.mf.map.api.CameraUpdateFactory;
@@ -91,7 +92,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
         // 기능 버튼 초기화
-        Button btnWritePost = findViewById(R.id.btnWritePost);
+        ImageButton btnWritePost = findViewById(R.id.btnWritePost);
         btnWritePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
