@@ -17,12 +17,6 @@ import android.widget.TextView;
 
 
 public class Login extends AppCompatActivity {
-<<<<<<< HEAD
- protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-         setContentView(R.layout.activity_login);
-    }
-=======
      TextView sign;
 
      protected void onCreate(Bundle savedInstanceState){
@@ -36,5 +30,4 @@ public class Login extends AppCompatActivity {
                 startActivity(intent);
            });
      }
->>>>>>> origin/woosik
  }
