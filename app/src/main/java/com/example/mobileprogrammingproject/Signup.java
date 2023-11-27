@@ -19,11 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Signup extends AppCompatActivity {
-<<<<<<< HEAD
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
-=======
     TextView back;
     EditText name, id, pw, pw2, email, birthyear, birthdate, birthday;
     Button pwcheck, submit;
@@ -62,6 +57,5 @@ public class Signup extends AppCompatActivity {
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
         });
->>>>>>> origin/woosik
     }
 }
