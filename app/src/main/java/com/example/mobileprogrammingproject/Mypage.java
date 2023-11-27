@@ -1,6 +1,7 @@
 package com.example.mobileprogrammingproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -19,6 +20,7 @@ public class Mypage extends AppCompatActivity {
     Button changeButton;
     TableRow view_post_tr, view_comment_tr, favorites_tr, logout_tr;
 
+    Toolbar toolbar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
@@ -31,6 +33,10 @@ public class Mypage extends AppCompatActivity {
         view_comment_tr = findViewById(R.id.view_comment_tr); // 내가 남긴 댓글 테이블
         favorites_tr = findViewById(R.id.favorites_tr); // 즐겨찾기 테이블
         logout_tr = findViewById(R.id.logout_tr); // 로그아웃 테이블
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
         changeButton.setOnClickListener(new View.OnClickListener(){  // 프로필 수정 버튼 클릭 시, 액티비티 이동
             public void onClick(View v){
@@ -84,4 +90,5 @@ public class Mypage extends AppCompatActivity {
 
         animator.start();
     }
+
 }

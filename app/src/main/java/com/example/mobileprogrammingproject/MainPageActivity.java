@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 
 import net.daum.mf.map.api.CameraUpdateFactory;
@@ -91,58 +93,23 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
         // 기능 버튼 초기화
-        Button btnWritePost = findViewById(R.id.btnWritePost);
+        ImageButton btnWritePost = findViewById(R.id.btnWritePost);
+
         btnWritePost.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                // AlertDialog를 사용하여 게시물 내용을 입력받음
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainPageActivity.this);
-                builder.setTitle("게시물 작성");
-
-                // EditText를 추가하여 사용자로부터 입력받음
-                final EditText input = new EditText(MainPageActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // 사용자가 입력한 내용을 가져옴
-                        String postContent = input.getText().toString();
-
-                        // 현재 지도 중심 좌표를 가져옴
-                        MapPoint centerMapPoint = mapView.getMapCenterPoint();
-
-                        // 마커를 생성하고 설정
-                        if (marker != null) {
-                            mapView.removePOIItem(marker); // 이미 생성된 마커가 있다면 제거
-                        }
-
-                        marker = new MapPOIItem();
-                        marker.setItemName(postContent);
-                        marker.setTag(1);
-                        marker.setMapPoint(centerMapPoint);
-                        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-                        marker.setCustomImageResourceId(R.drawable.marker);
-                        marker.setCustomImageAutoscale(false);
-                        marker.setCustomImageAnchor(0.5f, 1.0f);
-
-                        // 마커를 지도에 추가
-                        mapView.addPOIItem(marker);
-                    }
-                });
-
-                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+            public void onClick(View v) {
+                Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
+                startActivity(intent);
             }
         });
 
+        ImageButton mypage_btn = findViewById(R.id.btnMyPage);
+        mypage_btn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent = new Intent(MainPageActivity.this, Mypage.class);
+                startActivity(intent);
+            }
+        });
         // 폴리라인
         MapPolyline polyline = new MapPolyline();
         polyline.setTag(1000);

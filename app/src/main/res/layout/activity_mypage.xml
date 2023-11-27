@@ -8,15 +8,15 @@
     android:orientation="vertical"
     tools:context=".Mypage">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:gravity="center_horizontal"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:text="마이페이지" />
+        android:background="#EEEEEE"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="마이페이지"
+        app:titleTextAppearance="@style/ToolbarTitleText" />
     <View
         android:background="#D3D3D3"
         android:layout_width="match_parent"
@@ -216,7 +216,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="후기"
+                android:text="내가 남긴 댓글"
                 android:textColor="@color/black" />
         </TableRow>
 

@@ -175,7 +175,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:layout_margin="1dp"
-                android:text="댓글을 작성해주세요" />
+                android:text="댓글을 남겨주세요" />
 
             <Button
                 android:id="@+id/button"
