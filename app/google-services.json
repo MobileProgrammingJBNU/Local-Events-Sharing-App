@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "820842517380",
+    "project_id": "mobileprogramming-bdd8c",
+    "storage_bucket": "mobileprogramming-bdd8c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820842517380:android:6403a74d5ffb275bc6c3d1",
+        "android_client_info": {
+          "package_name": "com.example.mobileprogrammingproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCTnjgX5kkP4jNTBmqc8t6LnZiDI-1s5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
