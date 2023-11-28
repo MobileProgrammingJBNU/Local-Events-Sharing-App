@@ -8,15 +8,15 @@
     android:orientation="vertical"
     tools:context=".Screen">
 
-    <TextView
-        android:id="@+id/festival"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="축제이름"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold" />
+        android:background="#EEEEEE"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="축제 이름"
+        app:titleTextAppearance="@style/ToolbarTitleText_center" />
 
     <TableLayout
         android:layout_width="match_parent"

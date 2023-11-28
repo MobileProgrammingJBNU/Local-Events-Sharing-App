@@ -102,11 +102,20 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 startActivity(intent);
             }
         });
-
+        // 마이페이지 이동 버튼
         ImageButton mypage_btn = findViewById(R.id.btnMyPage);
         mypage_btn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Intent intent = new Intent(MainPageActivity.this, Mypage.class);
+                startActivity(intent);
+            }
+        });
+
+        // Screen 액티비티로 이동하는 임시버튼
+        Button temp_btn = findViewById(R.id.temp);
+        temp_btn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent = new Intent(MainPageActivity.this, Screen.class);
                 startActivity(intent);
             }
         });

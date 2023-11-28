@@ -11,4 +11,8 @@
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
+    <style name="ToolbarTitleText_center" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
