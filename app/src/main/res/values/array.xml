@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name = "카테고리">
+        <item> 축제 </item>
+        <item> 공지사항 </item>
+        <item> 자유 게시판 </item>
+    </string-array>
+</resources>
