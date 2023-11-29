@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!-- 지도를 표시할 레이아웃 -->
     <FrameLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent" />
+
+    <!-- 우상단 버튼을 담을 레이아웃 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/color4">
+
+        <!-- 여기에 추가된 버튼이 위치합니다 -->
+        <Button
+            android:id="@+id/btnWritePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내용 입력"
+            android:textColor="@color/color4"
+            android:backgroundTint="@color/color2"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
     <!-- 하단 네비게이션 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         app:menu="@menu/navi_menu"
         app:itemBackground="@color/color4"
         app:itemIconTint="@color/color1"
         app:itemTextColor="@color/color1">
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-</LinearLayout>
+</RelativeLayout>
