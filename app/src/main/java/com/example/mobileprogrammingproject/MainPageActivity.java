@@ -23,12 +23,15 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPOIItem;
@@ -44,6 +47,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private MapView mapView;
     private ViewGroup mapViewContainer;
     private MapPOIItem marker;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +95,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-
+        /*
         // 기능 버튼 초기화
         ImageButton btnWritePost = findViewById(R.id.btnWritePost);
 
@@ -119,6 +123,28 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 startActivity(intent);
             }
         });
+         */
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.tab_write) {
+                    Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.tab_refresh) {
+                    return true;
+                } else if (itemId == R.id.tab_user) {
+                    Intent intent = new Intent(MainPageActivity.this, Mypage.class);
+                    startActivity(intent);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
         // 폴리라인
         MapPolyline polyline = new MapPolyline();
         polyline.setTag(1000);

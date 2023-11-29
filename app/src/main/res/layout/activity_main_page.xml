@@ -1,63 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color2">
+    android:orientation="vertical">
 
     <!-- 지도를 표시할 레이아웃 -->
     <FrameLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <!-- 하단에 버튼을 담을 가로로 정렬된 레이아웃 -->
-    <LinearLayout
+    <!-- 하단 네비게이션 -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp">
-
-        <!-- 좌측 버튼: 게시글 작성 -->
-        <ImageButton
-            android:id="@+id/btnWritePost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="55dp"
-            android:backgroundTint="@color/color4"
-            android:layout_weight="1"
-            android:src="@drawable/edit" /> <!-- Set your image resource -->
-
-        <!-- 중앙 버튼: 마이페이지 -->
-        <ImageButton
-            android:id="@+id/btnMyPage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/color4"
-            android:layout_weight="1"
-            android:src="@drawable/account" /> <!-- Set your image resource -->
-
-        <!-- 우측 버튼: 조회 -->
-        <ImageButton
-            android:id="@+id/btnView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="55dp"
-            android:backgroundTint="@color/color4"
-            android:layout_weight="1"
-            android:src="@drawable/refresh" />
-
-        <Button
-            android:id="@+id/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="(임시)" /> <!-- Set your image resource -->
-
-
-    </LinearLayout>
-</RelativeLayout>
+        android:background="@android:color/transparent"
+        app:menu="@menu/navi_menu"
+        app:itemBackground="@color/color4"
+        app:itemIconTint="@color/color1"
+        app:itemTextColor="@color/color1">
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+</LinearLayout>

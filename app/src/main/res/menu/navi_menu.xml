@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tab_write"
+        android:enabled="true"
+        android:icon="@drawable/edit"
+        android:title="작성"/>
+
+    <item
+        android:id="@+id/tab_refresh"
+        android:enabled="true"
+        android:icon="@drawable/refresh"
+        android:title="조회"/>
+
+    <item
+        android:id="@+id/tab_user"
+        android:enabled="true"
+        android:icon="@drawable/account"
+        android:title="마이페이지"/>
+
+</menu>
