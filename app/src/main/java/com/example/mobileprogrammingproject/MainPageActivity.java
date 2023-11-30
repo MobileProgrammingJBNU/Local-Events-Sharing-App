@@ -138,31 +138,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
     }
 
-    // 마커를 현재 위치에 추가하는 메서드
-    private void addMarkerAtCurrentLocation() {
-        if (mapView != null) {
-            // 현재 지도 중심 좌표를 가져옴
-            MapPoint centerMapPoint = mapView.getMapCenterPoint();
-
-            // 마커를 생성하고 설정
-            if (marker != null) {
-                mapView.removePOIItem(marker); // 이미 생성된 마커가 있다면 제거
-            }
-
-            marker = new MapPOIItem();
-            marker.setItemName("New Marker");
-            marker.setTag(1);
-            marker.setMapPoint(centerMapPoint);
-            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-            marker.setCustomImageResourceId(R.drawable.marker);
-            marker.setCustomImageAutoscale(false);
-            marker.setCustomImageAnchor(0.5f, 1.0f);
-
-            // 마커를 지도에 추가
-            mapView.addPOIItem(marker);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grandResults) {
         // READ_PHONE_STATE의 권한 체크 결과를 불러옴
