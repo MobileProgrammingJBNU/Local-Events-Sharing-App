@@ -21,6 +21,7 @@
         <activity
             android:name=".Signup"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:parentActivityName=".Login"
             android:exported="false"
             android:label="@string/title_activity_signup"
             android:theme="@style/Theme.MobileProgrammingProject.Fullscreen" />

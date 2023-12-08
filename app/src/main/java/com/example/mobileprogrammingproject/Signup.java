@@ -17,10 +17,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 
 public class Signup extends AppCompatActivity {
-    TextView back;
-    EditText name, id, pw, pw2, email, birthyear, birthdate, birthday;
+    Toolbar toolbar;
+    EditText name, id, pw, pw2;
     Button pwcheck, submit;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +32,15 @@ public class Signup extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         //뒤로가기
-        back = findViewById(R.id.back);
-        back.setOnClickListener(v -> onBackPressed());
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
         //작성 항목
         name = findViewById(R.id.signName);
         id=findViewById(R.id.signID);
         pw=findViewById(R.id.signPW);
         pw2=findViewById(R.id.signPW2);
-        email=findViewById(R.id.signmail);
-        birthyear=findViewById(R.id.signBirth);
-        birthdate=findViewById(R.id.signBirth2);
-        birthday=findViewById(R.id.signBirth3);
 
         //비번 확인
         pwcheck = findViewById(R.id.pwcheckbutton);
