@@ -17,13 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
 public class Signup extends AppCompatActivity {
-    Toolbar toolbar;
     EditText name, id, pw, pw2;
     Button pwcheck, submit;
 
@@ -32,7 +31,7 @@ public class Signup extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         //뒤로가기
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
