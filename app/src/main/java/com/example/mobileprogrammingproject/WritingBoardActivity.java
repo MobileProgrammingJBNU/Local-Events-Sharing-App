@@ -185,7 +185,8 @@ public class WritingBoardActivity extends AppCompatActivity {
                         Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
                         // 성공적으로 추가된 경우 실행할 코드를 여기에 작성하세요.
                         Toast.makeText(getApplicationContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                        finish(); // 예를 들어, 현재 액티비티를 종료하는 등의 동작
+                        Intent intent = new Intent(WritingBoardActivity.this, MainPageActivity.class); // 예를 들어, 현재 액티비티를 종료하는 등의 동작
+                        startActivity(intent);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

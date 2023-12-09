@@ -114,7 +114,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         });
 
         btnWritePost = findViewById(R.id.btnWritePost);
-        btnWritePost.setVisibility(View.INVISIBLE);
+        btnWritePost.setVisibility(View.GONE);
 
         MapPolyline polyline = new MapPolyline();
         polyline.setTag(1000);
