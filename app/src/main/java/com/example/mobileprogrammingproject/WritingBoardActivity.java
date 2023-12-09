@@ -1,6 +1,7 @@
 package com.example.mobileprogrammingproject;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -43,26 +45,36 @@ public class WritingBoardActivity extends AppCompatActivity {
     DatePickerDialog datePickerDialog2;
     double markerLatitude;
     double markerLongitude;
+    TimePickerDialog timePickerDialog;
+    TimePickerDialog timePickerDialog2;
+    int pHour;
+    int pMinute;
+    TextView timeText;
+    TextView timeText2;
+
+
     public static class Post {
         private String title;
         private String content;
         private String location;
         private String startdate;
         private String enddate;
-        private String category;
+        private String starttime;
+        private String endtime;
 
         public Post() {
             // Firebase에서 객체를 가져올 때 필요한 기본 생성자
         }
 
         public Post(String title, String content, String location, String startdate, String
-                enddate, String category) {
+                enddate, String starttime, String endtime) {
             this.title = title;
             this.content = content;
             this.location = location;
             this.startdate = startdate;
             this.enddate = enddate;
-            this.category = category;
+            this.starttime = starttime;
+            this.endtime = endtime;
         }
 
         // Getter 및 Setter 메서드 추가
@@ -80,6 +92,8 @@ public class WritingBoardActivity extends AppCompatActivity {
 
         dateText = findViewById(R.id.textView);
         dateText2 = findViewById(R.id.textView2);
+        timeText = findViewById(R.id.textView3);
+        timeText2 = findViewById(R.id.textView5);
         Button datePickerBtn = findViewById(R.id.date_picker_btn);
         Button datePickerBtn2 = findViewById(R.id.date_picker_btn2);
         Button registerButton = findViewById(R.id.button2);
@@ -89,7 +103,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         markerLongitude = intent.getDoubleExtra("markerLongitude", 0.0);
         String locationName = intent.getStringExtra("locationName");
 
-        EditText locationEditText = findViewById(R.id.editTextText5);
+        TextView locationEditText = findViewById(R.id.editTextText5);
         locationEditText.setText(locationName);
 
         datePickerBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +124,22 @@ public class WritingBoardActivity extends AppCompatActivity {
                                 String date = year + "/" + month + "/" + day;
 
                                 dateText.setText(date);
+                                timePickerDialog.show();
                             }
                         }, pYear, pMonth, pDay);
                 datePickerDialog.show();
+
+                timePickerDialog = new TimePickerDialog(WritingBoardActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                pHour = hourOfDay;
+                                pMinute = minute;
+                                String time = pHour + " : " + pMinute;
+
+                                timeText.setText(time);
+                            }
+                        }, 21, 12, true);
             } //onClick
         });
 
@@ -134,10 +161,23 @@ public class WritingBoardActivity extends AppCompatActivity {
                                 String date = year + "/" + month + "/" + day;
 
                                 dateText2.setText(date);
+                                timePickerDialog2.show();
                             }
                         }, pYear, pMonth, pDay);
+
                 datePickerDialog2.show();
 
+                timePickerDialog2 = new TimePickerDialog(WritingBoardActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                pHour = hourOfDay;
+                                pMinute = minute;
+                                String time = pHour + " : " + pMinute;
+
+                                timeText2.setText(time);
+                            }
+                        }, 21, 12, true);
             } //onClick
         });
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -151,19 +191,22 @@ public class WritingBoardActivity extends AppCompatActivity {
     private void savePostToFirestore() {
         EditText titleEditText = findViewById(R.id.editTextText);
         EditText contentEditText = findViewById(R.id.editTextText2);
-        EditText locationEditText = findViewById(R.id.editTextText5);
+        TextView locationEditText = findViewById(R.id.editTextText5);
         TextView startdateTextView = findViewById(R.id.textView);
         TextView enddateTextView = findViewById(R.id.textView2);
-        Spinner spinner = findViewById(R.id.spinner);
+        TextView starttimeTextView = findViewById(R.id.textView3);
+        TextView endtimeTextView = findViewById(R.id.textView5);
 
         String title = titleEditText.getText().toString();
         String content = contentEditText.getText().toString();
         String location = locationEditText.getText().toString();
         String startdate = startdateTextView.getText().toString();
         String enddate = enddateTextView.getText().toString();
-        String category = spinner.getSelectedItem().toString();
         String latitudeString = String.valueOf(markerLatitude);
         String longitudeString = String.valueOf(markerLongitude);
+        String starttime = starttimeTextView.getText().toString();
+        String endtime = endtimeTextView.getText().toString();
+        String uid = FirebaseAuth.getInstance().getUid();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -172,10 +215,12 @@ public class WritingBoardActivity extends AppCompatActivity {
         post.put("Content", content);
         post.put("StartDate", startdate);
         post.put("EndDate", enddate);
-        post.put("Category", category);
         post.put("Location", location);
         post.put("Latitude", latitudeString);
         post.put("Longitude", longitudeString);
+        post.put("StartTime", starttime);
+        post.put("EndTime", endtime);
+        post.put("UserID", uid);
 
         db.collection("posts")
                 .add(post)
@@ -185,8 +230,17 @@ public class WritingBoardActivity extends AppCompatActivity {
                         Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
                         // 성공적으로 추가된 경우 실행할 코드를 여기에 작성하세요.
                         Toast.makeText(getApplicationContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(WritingBoardActivity.this, MainPageActivity.class); // 예를 들어, 현재 액티비티를 종료하는 등의 동작
-                        startActivity(intent);
+                        String post_id = documentReference.getId(); // 생성된 post의 id
+                        db.collection("posts")
+                                .document(post_id)
+                                .update("PostID", post_id)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Intent intent = new Intent(WritingBoardActivity.this, MainPageActivity.class); // 예를 들어, 현재 액티비티를 종료하는 등의 동작
+                                        startActivity(intent);
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
