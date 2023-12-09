@@ -94,14 +94,14 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
 
         // 기능 버튼 초기화
         ImageButton btnWritePost = findViewById(R.id.btnWritePost);
-
         btnWritePost.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
                 startActivity(intent);
             }
         });
+
         // 마이페이지 이동 버튼
         ImageButton mypage_btn = findViewById(R.id.btnMyPage);
         mypage_btn.setOnClickListener(new View.OnClickListener(){
@@ -119,6 +119,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 startActivity(intent);
             }
         });
+
         // 폴리라인
         MapPolyline polyline = new MapPolyline();
         polyline.setTag(1000);
@@ -136,6 +137,31 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         MapPointBounds mapPointBounds = new MapPointBounds(polyline.getMapPoints());
         int padding = 100; // px
         mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
+    }
+
+    // 마커를 현재 위치에 추가하는 메서드
+    private void addMarkerAtCurrentLocation() {
+        if (mapView != null) {
+            // 현재 지도 중심 좌표를 가져옴
+            MapPoint centerMapPoint = mapView.getMapCenterPoint();
+
+            // 마커를 생성하고 설정
+            if (marker != null) {
+                mapView.removePOIItem(marker); // 이미 생성된 마커가 있다면 제거
+            }
+
+            marker = new MapPOIItem();
+            marker.setItemName("New Marker");
+            marker.setTag(1);
+            marker.setMapPoint(centerMapPoint);
+            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+            marker.setCustomImageResourceId(R.drawable.marker);
+            marker.setCustomImageAutoscale(false);
+            marker.setCustomImageAnchor(0.5f, 1.0f);
+
+            // 마커를 지도에 추가
+            mapView.addPOIItem(marker);
+        }
     }
 
     @Override
