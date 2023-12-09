@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPOIItem;
@@ -40,6 +41,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
 
 public class MainPageActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
     private MapView mapView;
@@ -95,6 +101,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                     showLocationSelectionDialog();
                     return true;
                 } else if (itemId == R.id.tab_refresh) {
+                    fetchDataFromFirestore();
                     return true;
                 } else if (itemId == R.id.tab_user) {
                     Intent intent = new Intent(MainPageActivity.this, Mypage.class);
@@ -233,6 +240,42 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             return null;
         }
     }
+    private void fetchDataFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // "posts"를 실제 컬렉션 이름으로 대체하세요
+        db.collection("posts")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // 기존의 마커를 지도에서 모두 제거합니다
+                        mapView.removeAllPOIItems();
+
+                        // 검색된 문서를 처리합니다
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // document.getData()를 사용하여 데이터에 접근합니다
+                            // 예를 들어 문서에 "latitude", "longitude", "content" 필드가 있다면
+                            double latitude = Double.parseDouble(document.getString("LatitudeString"));
+                            double longitude = Double.parseDouble(document.getString("LongitudeString"));
+                            String content = document.getString("Content");
+
+                            // 각 문서에 대한 마커를 생성합니다
+                            MapPOIItem marker = new MapPOIItem();
+                            marker.setItemName(content);
+                            marker.setTag(1);
+                            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude));
+                            marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+                            marker.setCustomImageResourceId(R.drawable.marker);
+                            marker.setCustomImageAutoscale(false);
+                            marker.setCustomImageAnchor(0.5f, 1.0f);
+
+                            mapView.addPOIItem(marker);
+                        }
+                    } else {
+                        Log.e("FirestoreData", "문서 가져오기 실패: ", task.getException());
+                    }
+                });
+    }
 
 
 
@@ -302,7 +345,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // 취소 버튼이 클릭되었을 때 실행되는 부분
                     }
                 });
 
@@ -311,4 +353,5 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             }
         });
     }
+
 }

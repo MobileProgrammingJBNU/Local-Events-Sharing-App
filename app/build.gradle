@@ -43,7 +43,8 @@ dependencies {
     implementation fileTree(dir: 'src\\main\\jniLibs', include: ['*.aar', '*.jar'], exclude: [])
     implementation 'de.hdodenhof:circleimageview:2.2.0' // 원형 프로필
     implementation platform('com.google.firebase:firebase-bom:32.6.0') // 파이어베이스
-    implementation 'com.google.firebase:firebase-analytics' // 파이어베이스
+    implementation 'com.google.firebase:firebase-analytics:21.5.0' // 파이어베이스
     implementation 'com.google.firebase:firebase-database' // 파이어베이스. 실시간 데이터를 타 사용자들이 확인해야할 때 사용.
-    implementation 'com.google.firebase:firebase-auth' // 파이어베이스. 로그인, 회원가입에 활용
+    implementation 'com.google.firebase:firebase-auth:22.3.0' // 파이어베이스. 로그인, 회원가입에 활용
+    implementation 'com.google.firebase:firebase-firestore:23.0.3' // 파이어 스토어
 }
