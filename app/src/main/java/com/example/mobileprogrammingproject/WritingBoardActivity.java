@@ -206,6 +206,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         String longitudeString = String.valueOf(markerLongitude);
         String starttime = starttimeTextView.getText().toString();
         String endtime = endtimeTextView.getText().toString();
+        String uid = FirebaseAuth.getInstance().getUid();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -219,6 +220,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         post.put("Longitude", longitudeString);
         post.put("StartTime", starttime);
         post.put("EndTime", endtime);
+        post.put("UserID", uid);
 
         db.collection("posts")
                 .add(post)
@@ -231,7 +233,7 @@ public class WritingBoardActivity extends AppCompatActivity {
                         String post_id = documentReference.getId(); // 생성된 post의 id
                         db.collection("posts")
                                 .document(post_id)
-                                .update("id", post_id)
+                                .update("PostID", post_id)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
