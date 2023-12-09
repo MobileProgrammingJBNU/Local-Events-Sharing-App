@@ -41,6 +41,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -91,6 +92,8 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+
+        fetchDataFromFirestore();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -243,26 +246,20 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private void fetchDataFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // "posts"를 실제 컬렉션 이름으로 대체하세요
+        mapView.removeAllPOIItems(); // 마커와 리스너를 모두 제거
+
         db.collection("posts")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // 기존의 마커를 지도에서 모두 제거합니다
-                        mapView.removeAllPOIItems();
+                        // mapView.setPOIItemEventListener(null); // 기존 리스너 제거 (이 부분은 주석 처리할 수 있습니다.)
 
-                        // 검색된 문서를 처리합니다
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            // document.getData()를 사용하여 데이터에 접근합니다
                             double latitude = Double.parseDouble(document.getString("Latitude"));
                             double longitude = Double.parseDouble(document.getString("Longitude"));
                             String title = document.getString("Title");
-                            String content = document.getString("Content");
-                            String startdate = document.getString("StartDate");
-                            String enddate =  document.getString("EndDate");
+                            String id = document.getString("id");
 
-
-                            // 각 문서에 대한 마커를 생성합니다
                             MapPOIItem marker = new MapPOIItem();
                             marker.setItemName(title);
                             marker.setTag(1);
@@ -272,14 +269,57 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                             marker.setCustomImageAutoscale(false);
                             marker.setCustomImageAnchor(0.5f, 1.0f);
 
-                            marker.setUserObject(document.getData()); // 문서의 데이터 전체를 마커의 UserObject로 설정
+                            marker.setUserObject(document.getData());
 
+                            // 마커에 클릭 리스너 추가
                             mapView.addPOIItem(marker);
                         }
+
+                        // 마커 클릭 리스너 추가 (기존 리스너를 모두 제거한 후에 새로운 리스너를 추가)
+                        mapView.setPOIItemEventListener(new MapView.POIItemEventListener() {
+                            @Override
+                            public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+                                // 마커를 선택했을 때의 동작
+                                showMarkerDetails(mapPOIItem);
+                            }
+
+                            @Override
+                            public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+                                // 마커의 말풍선을 터치했을 때의 동작
+                                showMarkerDetails(mapPOIItem);
+                            }
+
+                            @Override
+                            public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+                                // 말풍선의 버튼을 터치했을 때의 동작
+                                showMarkerDetails(mapPOIItem);
+                            }
+
+                            @Override
+                            public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
+                                // 마커를 드래그했을 때의 동작
+                            }
+                        });
+
                     } else {
                         Log.e("FirestoreData", "문서 가져오기 실패: ", task.getException());
                     }
                 });
+    }
+
+
+
+    private void showMarkerDetails(MapPOIItem mapPOIItem) {
+        // 마커에서 정보 추출
+        Map<String, Object> markerData = (Map<String, Object>) mapPOIItem.getUserObject();
+        String id = (String) markerData.get("id");
+
+
+        // Screen 액티비티 시작 및 Intent를 사용하여 정보 전달
+        Intent intent = new Intent(MainPageActivity.this, Screen.class);
+        intent.putExtra("id", id);
+
+        startActivity(intent);
     }
 
 

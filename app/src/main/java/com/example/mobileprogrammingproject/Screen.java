@@ -1,5 +1,6 @@
 package com.example.mobileprogrammingproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,5 +42,13 @@ public class Screen extends AppCompatActivity {
 
         animator.start();
     }
+    public void onBackPressed() {
+        super.onBackPressed();
+        // 여기에 원하는 동작을 추가하세요
 
+        // 원래의 뒤로가기 동작을 유지하고 싶다면 super.onBackPressed()를 호출하세요.
+        Intent intent = new Intent(Screen.this, MainPageActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
