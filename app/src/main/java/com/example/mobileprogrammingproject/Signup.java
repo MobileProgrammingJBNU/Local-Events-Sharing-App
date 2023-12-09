@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Signup extends AppCompatActivity {
-    TextView back;
     EditText name_et, pw_et, email_et, pw2_et, nickname_et;
     Button pwcheck, submit;
     String email, pw, nickname;
@@ -44,10 +43,6 @@ public class Signup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
-        //뒤로가기
-        back = findViewById(R.id.back);
-        back.setOnClickListener(v -> onBackPressed());
 
         //작성 항목
 
@@ -73,7 +68,7 @@ public class Signup extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email_et = findViewById(R.id.signmail);
+                email_et = findViewById(R.id.signEmail);
                 pw_et = findViewById(R.id.signPW);
                 nickname_et = findViewById(R.id.signName);
 

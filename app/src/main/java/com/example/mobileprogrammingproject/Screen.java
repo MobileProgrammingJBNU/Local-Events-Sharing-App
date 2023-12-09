@@ -1,5 +1,6 @@
 package com.example.mobileprogrammingproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,7 +55,7 @@ public class Screen extends AppCompatActivity {
 
 
         FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        databaseReference-firebaseDatabase.getReference("comments");
+       // databaseReference-firebaseDatabase.getReference("comments");
         Button send = findViewById(R.id.comment_btn_send);
         EditText comment_text = findViewById(R.id.comment_edit_message);
         send.setOnClickListener(new View.OnClickListener() {
@@ -62,9 +63,9 @@ public class Screen extends AppCompatActivity {
             public void onClick(View v) {
                 String message = comment_text.getText().toString();
                 long timestamp = System.currentTimeMillis(); // 밀리초 단위 현재 시간
-                String userId = //bd에서 유저id가져오기
+               // String userId = //bd에서 유저id가져오기
 
-                        saveCommentToFirebase(userId, timestamp, message);
+                       // saveCommentToFirebase(userId, timestamp, message);
             }
         });
     }
@@ -88,8 +89,6 @@ public class Screen extends AppCompatActivity {
 
         animator.start();
     }
-
-}
     public void onBackPressed() {
         super.onBackPressed();
         // 여기에 원하는 동작을 추가하세요
@@ -100,3 +99,4 @@ public class Screen extends AppCompatActivity {
         finish();
     }
 }
+
