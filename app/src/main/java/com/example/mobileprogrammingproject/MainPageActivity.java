@@ -101,7 +101,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                     showLocationSelectionDialog();
                     return true;
                 } else if (itemId == R.id.tab_refresh) {
-                    fetchDataFromFirestore();
+                    fetchDataFromFirestore(); // 조회버튼 눌렀을 때
                     return true;
                 } else if (itemId == R.id.tab_user) {
                     Intent intent = new Intent(MainPageActivity.this, Mypage.class);

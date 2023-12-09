@@ -67,8 +67,7 @@
                 android:ems="10"
                 android:hint="제목"
                 android:inputType="text"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
+                android:padding="15dp"
                 android:textSize="15sp" />
 
             <TextView
@@ -90,10 +89,10 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/writing_border"
                 android:ems="10"
-                android:inputType="text"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:text="내용"
+                android:inputType="textMultiLine"
+                android:padding="15dp"
+                android:hint="게시글에 올릴 내용을 작성해 주세요."
+                android:gravity="top|left"
                 android:textSize="15sp" />
 
             <TextView
@@ -110,7 +109,10 @@
                 android:id="@+id/spinner"
                 android:entries="@array/카테고리"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/writing_border3"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp" />
@@ -138,11 +140,10 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/custom_button"
+                    android:background="@drawable/custom_button2"
                     android:ems="10"
                     android:inputType="text"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="15dp"
+                    android:padding="15dp"
                     android:text="시작일"
                     android:gravity="center"
                     android:textSize="15sp" />
@@ -155,12 +156,12 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="15dp"
-                    android:textSize="15sp"
+                    android:background="@drawable/writing_border2"
                     android:ems="10"
                     android:gravity="center"
-                    android:text="Select Date" />
+                    android:padding="15dp"
+                    android:text="날짜를 선택해 주세요."
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -189,12 +190,11 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="text"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="15dp"
+                    android:padding="15dp"
                     android:text="마감일"
                     android:textSize="15sp"
                     android:gravity="center"
-                    android:background="@drawable/custom_button" />
+                    android:background="@drawable/custom_button2" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -204,12 +204,12 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="15dp"
+                    android:padding="15dp"
                     android:textSize="15sp"
+                    android:background="@drawable/writing_border2"
                     android:ems="10"
                     android:gravity="center"
-                    android:text="Select Date" />
+                    android:text="날짜를 선택해 주세요." />
 
             </LinearLayout>
 
@@ -233,8 +233,7 @@
                 android:background="@drawable/writing_border"
                 android:ems="10"
                 android:inputType="text"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
+                android:padding="15dp"
                 android:text="위치"
                 android:textSize="15sp" />
 
@@ -254,6 +253,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -267,8 +267,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:padding="15dp"
             android:text="등록"
             android:textSize="15sp" />
 
