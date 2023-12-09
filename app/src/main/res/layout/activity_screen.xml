@@ -65,7 +65,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="5"
                         android:gravity="center"
-                        android:text="카테고리"
+                        android:text="categori"
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -211,54 +211,69 @@
                     app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="#00ADB5">
+                android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/comment"
-                    android:layout_width="330dp"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/my_toolbar5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#EEEEEE"
+                    android:minHeight="?attr/actionBarSize"
+                    android:theme="?attr/actionBarTheme"
+                    app:titleTextAppearance="@style/ToolbarTitleText">
+
+                    <TextView
+                        android:id="@+id/comment_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="30dp"
+                        android:includeFontPadding="false"
+                        android:text="댓글"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </androidx.appcompat.widget.Toolbar>
+
+                <LinearLayout
+                    android:id="@+id/toolbar_division"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="1dp"
+                    android:layout_below="@+id/my_toolbar"
                     android:background="@color/white"
-                    android:text="댓글을 작성해주세요" />
+                    android:orientation="horizontal"></LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/comment_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/toolbar_division"
+                    android:layout_marginTop="8dp"></androidx.recyclerview.widget.RecyclerView>
 
                 <Button
-                    android:id="@+id/button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center_vertical"
+                    android:id="@+id/comment_btn_send"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/comment_recyclerview"
+                    android:layout_margin="10dp"
                     android:text="등록"
-                    android:textSize="20dp" />
-            </LinearLayout>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"></Button>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ScrollView
-                    android:id="@+id/scrollView"
+                <EditText
+                    android:id="@+id/comment_edit_message"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/comment_recyclerview"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toLeftOf="@id/comment_btn_send"></EditText>
+            </RelativeLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView9"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="댓글창"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-                </ScrollView>
-
-            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>
