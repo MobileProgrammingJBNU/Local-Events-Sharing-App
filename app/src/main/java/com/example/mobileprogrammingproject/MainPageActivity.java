@@ -114,7 +114,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         });
 
         btnWritePost = findViewById(R.id.btnWritePost);
-        btnWritePost.setVisibility(View.GONE);
+        btnWritePost.setVisibility(View.INVISIBLE);
 
         MapPolyline polyline = new MapPolyline();
         polyline.setTag(1000);
@@ -254,20 +254,25 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                         // 검색된 문서를 처리합니다
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             // document.getData()를 사용하여 데이터에 접근합니다
-                            // 예를 들어 문서에 "latitude", "longitude", "content" 필드가 있다면
-                            double latitude = Double.parseDouble(document.getString("LatitudeString"));
-                            double longitude = Double.parseDouble(document.getString("LongitudeString"));
+                            double latitude = Double.parseDouble(document.getString("Latitude"));
+                            double longitude = Double.parseDouble(document.getString("Longitude"));
+                            String title = document.getString("Title");
                             String content = document.getString("Content");
+                            String startdate = document.getString("StartDate");
+                            String enddate =  document.getString("EndDate");
+
 
                             // 각 문서에 대한 마커를 생성합니다
                             MapPOIItem marker = new MapPOIItem();
-                            marker.setItemName(content);
+                            marker.setItemName(title);
                             marker.setTag(1);
                             marker.setMapPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude));
                             marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
                             marker.setCustomImageResourceId(R.drawable.marker);
                             marker.setCustomImageAutoscale(false);
                             marker.setCustomImageAnchor(0.5f, 1.0f);
+
+                            marker.setUserObject(document.getData()); // 문서의 데이터 전체를 마커의 UserObject로 설정
 
                             mapView.addPOIItem(marker);
                         }
