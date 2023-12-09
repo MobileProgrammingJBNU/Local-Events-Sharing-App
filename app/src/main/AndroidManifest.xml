@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,8 +15,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileProgrammingProject"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="e267389f10b4291b9da6816d4acaabbc"/>
+        <activity
+            android:name=".CommentActivity"
+            android:exported="false"
+            android:label="@string/title_activity_comment"
+            android:theme="@style/Theme.MobileProgrammingProject" />
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/Theme.MobileProgrammingProject" />
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="e267389f10b4291b9da6816d4acaabbc" />
+
         <activity
             android:name=".Signup"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -29,7 +43,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.MobileProgrammingProject.Fullscreen" >
+            android:theme="@style/Theme.MobileProgrammingProject.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,19 +52,18 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".Screen"
-            android:parentActivityName=".MainPageActivity"
-            android:exported="true" >
-        </activity>
-        <activity android:name=".MainPageActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".WritingBoardActivity"
-            android:parentActivityName=".MainPageActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:parentActivityName=".MainPageActivity" />
+        <activity
+            android:name=".MainPageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".WritingBoardActivity"
+            android:exported="true"
+            android:parentActivityName=".MainPageActivity" />
         <activity
             android:name=".MyFavoritesActivity"
             android:exported="false"
@@ -69,7 +82,8 @@
             android:parentActivityName=".Mypage" />
         <activity
             android:name=".Mypage"
-            android:parentActivityName=".MainPageActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:parentActivityName=".MainPageActivity" />
     </application>
+
 </manifest>

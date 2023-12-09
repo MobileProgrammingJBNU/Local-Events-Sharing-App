@@ -39,4 +39,5 @@ public class Screen extends AppCompatActivity {
 
         animator.start();
     }
+
 }
