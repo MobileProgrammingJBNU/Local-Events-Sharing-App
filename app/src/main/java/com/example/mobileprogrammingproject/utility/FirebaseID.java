@@ -23,4 +23,6 @@ public class FirebaseID {
     public static String ratingcount = "ratingcount"; // 파이어스토어 내에 몇명이 평가했는지 확인
 
     public static String save = "save"; // 찜목록 collection 이름
+
+    public static String info = "info"; // user 자기소개
 }

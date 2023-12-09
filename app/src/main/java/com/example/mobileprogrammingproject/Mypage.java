@@ -12,16 +12,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Mypage extends AppCompatActivity {
 
     ProgressBar progressBar;
     Button changeButton;
     TableRow view_post_tr, view_comment_tr, favorites_tr, logout_tr;
+    FirebaseFirestore db;
 
+    TextView nickname_tv;
+    String user_id, nickname;
     Toolbar toolbar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +42,27 @@ public class Mypage extends AppCompatActivity {
         view_comment_tr = findViewById(R.id.view_comment_tr); // 내가 남긴 댓글 테이블
         favorites_tr = findViewById(R.id.favorites_tr); // 즐겨찾기 테이블
         logout_tr = findViewById(R.id.logout_tr); // 로그아웃 테이블
+        nickname_tv = findViewById(R.id.nickname);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
+        user_id = FirebaseAuth.getInstance().getUid(); // user_id 가져오기
+
+        db = FirebaseFirestore.getInstance(); // 현재 파이어스토어의 인스턴스 불러오기.
+
+
+        db.collection("user").document(user_id).get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if(documentSnapshot.exists()){
+                                    nickname = documentSnapshot.getString("nickname");
+                                    nickname_tv.setText(nickname);
+                                }
+                            }
+                        });
         changeButton.setOnClickListener(new View.OnClickListener(){  // 프로필 수정 버튼 클릭 시, 액티비티 이동
             public void onClick(View v){
                 Intent intent = new Intent(getApplicationContext(), ProfileChange.class);
