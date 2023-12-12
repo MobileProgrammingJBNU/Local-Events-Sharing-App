@@ -218,8 +218,8 @@ public class Screen extends AppCompatActivity {
 
 
                                         Map<String, Object> comments = new HashMap<>();
-                                        comments.put("userID", user_id);
-                                        comments.put("postID", post_id);
+                                        comments.put("UserID", user_id);
+                                        comments.put("PostID", post_id);
                                         comments.put("comment", comment);
                                         comments.put("nickname", nickname);
 
@@ -228,17 +228,23 @@ public class Screen extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
-                                                        Intent intent = new Intent(Screen.this, Screen.class);
-                                                        intent.putExtra("post_id", post_id);
-                                                        startActivity(intent);
-                                                        finish();
+
+                                                        Comment newComment = new Comment();
+                                                        newComment.setCommenterName(nickname);
+                                                        newComment.setCommentText(comment);
+
+                                                        commentList.add(newComment);
+                                                        commentAdapter.notifyDataSetChanged();
+                                                        comment_et.setText("");
+
+                                                        Toast.makeText(Screen.this, "댓글 작성을 완료했습니다.", Toast.LENGTH_SHORT).show();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         Toast.makeText(Screen.this, "댓글 작성이 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                                                    }
+                                                       }
                                                 });
                                     }
                                 }
@@ -259,25 +265,6 @@ public class Screen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onStarClick(v);
-            }
-        });
-
-        send_iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 댓글 추가 로직...
-
-                // Comment 객체를 생성하고 commentList에 추가
-                Comment newComment = new Comment();
-                newComment.setCommenterName("작성자 이름");
-                newComment.setCommentText(comment_et.getText().toString());
-
-                commentList.add(newComment);
-
-                // RecyclerView에 데이터 변경을 알림
-                commentAdapter.notifyDataSetChanged();
-
-                // 기존 댓글 작성 로직...
             }
         });
 
