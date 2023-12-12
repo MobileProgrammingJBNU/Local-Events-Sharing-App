@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class Screen extends AppCompatActivity {
     FirebaseFirestore db;
     Intent intent;
     ImageView send_iv, img_iv;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,9 @@ public class Screen extends AppCompatActivity {
         send_iv = findViewById(R.id.send_iv);
         comment_et = findViewById(R.id.comment_et);
         img_iv = findViewById(R.id.img_iv);
+        progressBar = findViewById(R.id.progress_view);
 
+        progressBar.setVisibility(View.VISIBLE); // 로딩시 progressbar VISIBLE 으로 설정.
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -109,6 +113,7 @@ public class Screen extends AppCompatActivity {
                                             Picasso.get()
                                                     .load(img)
                                                     .into(img_iv);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -117,6 +122,8 @@ public class Screen extends AppCompatActivity {
                                             Toast.makeText(Screen.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
+
+
                         }
                     }
                 })
@@ -183,12 +190,6 @@ public class Screen extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        // 여기에 원하는 동작을 추가하세요
-
-        // 원래의 뒤로가기 동작을 유지하고 싶다면 super.onBackPressed()를 호출하세요.
-        Intent intent = new Intent(Screen.this, MainPageActivity.class);
-        startActivity(intent);
-        finish();
     }
 }
 
