@@ -31,6 +31,28 @@ public class ProfileChange extends AppCompatActivity {
     String email, info, nickname, user_id;
     FirebaseFirestore db;
 
+    //닉네임 중복 체크 함수
+    private void checkNicknameExists(String nickname, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
+        db.collection("user")
+                .whereEqualTo("nickname", nickname)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    boolean isDuplicate = false;
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        if (!document.getId().equals(user_id)) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    if (isDuplicate) {
+                        onSuccessListener.onSuccess(null); // 닉네임 중복
+                    } else {
+                        onFailureListener.onFailure(null); // 닉네임 중복 아님
+                    }
+                });
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,26 +102,25 @@ public class ProfileChange extends AppCompatActivity {
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){ // 액션바 항목 선택시 실행되는 메소드.
-        if(item.getItemId() == R.id.toolbar_complete_btn){ // 완료 버튼 눌렀을 시 동작. 잠시 toast로 대체.
-            Map<String, Object> updateData = new HashMap<>();
-            updateData.put("nickname", nickname_et.getText().toString());
-            updateData.put("info", info_et.getText().toString());
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.toolbar_complete_btn) {
+            String newNickname = nickname_et.getText().toString();
 
-            db.collection("user").document(user_id).update(updateData)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(ProfileChange.this, "사용자 정보가 성공적으로 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProfileChange.this, "사용자 정보가 업데이트가 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            checkNicknameExists(newNickname, unused -> {
+                Toast.makeText(ProfileChange.this, "중복된 닉네임입니다.", Toast.LENGTH_SHORT).show();
+            }, unused -> {
+                Map<String, Object> updateData = new HashMap<>();
+                updateData.put("nickname", newNickname);
+                updateData.put("info", info_et.getText().toString());
+
+                db.collection("user").document(user_id).update(updateData)
+                        .addOnSuccessListener(aVoid -> Toast.makeText(ProfileChange.this, "사용자 정보가 성공적으로 업데이트 되었습니다.", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(ProfileChange.this, "사용자 정보 업데이트가 실패하였습니다.", Toast.LENGTH_SHORT).show());
+            });
+
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
     public void onBackPressed() {
