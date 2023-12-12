@@ -97,7 +97,9 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
+
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        mapView.setShowCurrentLocationMarker(true);
 
         fetchDataFromFirestore();
 
@@ -128,7 +130,8 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             @Override
             public void onClick(View v) {
                 // Move the map to the user's current location
-                moveToCurrentLocation();
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                mapView.setShowCurrentLocationMarker(true);
             }
         });
 
@@ -151,11 +154,10 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
         */
 
-        mapView.setOnTouchListener(new View.OnTouchListener() {
+        mapView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-                return false;
+            public void onClick(View v) {
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
             }
         });
     }

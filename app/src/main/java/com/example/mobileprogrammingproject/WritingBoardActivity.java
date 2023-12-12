@@ -1,14 +1,20 @@
 package com.example.mobileprogrammingproject;
 
+import static com.google.common.io.Files.getFileExtension;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -18,6 +24,11 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -32,6 +43,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 import org.w3c.dom.Text;
@@ -52,7 +67,12 @@ public class WritingBoardActivity extends AppCompatActivity {
     TextView timeText;
     TextView timeText2;
 
+    private Uri imageUri;
 
+    ImageView img_iv;
+    String img;
+    ProgressBar progressBar;
+    private final StorageReference reference = FirebaseStorage.getInstance().getReference();
     public static class Post {
         private String title;
         private String content;
@@ -94,10 +114,12 @@ public class WritingBoardActivity extends AppCompatActivity {
         dateText2 = findViewById(R.id.textView2);
         timeText = findViewById(R.id.textView3);
         timeText2 = findViewById(R.id.textView5);
+        img_iv = findViewById(R.id.img_iv);
         Button datePickerBtn = findViewById(R.id.date_picker_btn);
         Button datePickerBtn2 = findViewById(R.id.date_picker_btn2);
         Button registerButton = findViewById(R.id.button2);
 
+        progressBar = findViewById(R.id.progress_view);
         Intent intent = getIntent();
         markerLatitude = intent.getDoubleExtra("markerLatitude", 0.0);
         markerLongitude = intent.getDoubleExtra("markerLongitude", 0.0);
@@ -106,6 +128,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         TextView locationEditText = findViewById(R.id.editTextText5);
         locationEditText.setText(locationName);
 
+        progressBar.setVisibility(View.GONE);
         datePickerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,6 +203,19 @@ public class WritingBoardActivity extends AppCompatActivity {
                         }, 21, 12, true);
             } //onClick
         });
+
+        img_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/");
+
+                activityResult.launch(intent);
+            }
+        });
+
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,6 +257,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         post.put("StartTime", starttime);
         post.put("EndTime", endtime);
         post.put("UserID", uid);
+        //post.put("ImageURL", img);
 
         db.collection("posts")
                 .add(post)
@@ -237,8 +274,10 @@ public class WritingBoardActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Intent intent = new Intent(WritingBoardActivity.this, MainPageActivity.class); // 예를 들어, 현재 액티비티를 종료하는 등의 동작
-                                        startActivity(intent);
+                                        if(imageUri != null){
+                                            uploadToFirebase(imageUri); // 이미지 파이어베이스에 업로드
+                                        }
+                                        finish();
                                     }
                                 });
                     }
@@ -251,4 +290,77 @@ public class WritingBoardActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    //사진 가져오기
+    ActivityResultLauncher<Intent> activityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>(){
+                public void onActivityResult(ActivityResult result){
+                    if(result.getResultCode() == RESULT_OK && result.getData() != null){
+                        imageUri = result.getData().getData();
+                        Log.d("imageUri는 :", imageUri.toString());
+
+
+                        // ImageView의 레이아웃 파라미터를 가져옵니다.
+                        ViewGroup.LayoutParams params = img_iv.getLayoutParams();
+
+
+                        // 가로와 세로를 MATCH_PARENT로 설정합니다.
+                        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+
+                        // 변경된 레이아웃 파라미터를 ImageView에 적용합니다.
+                        img_iv.setLayoutParams(params);
+
+                        img_iv.setImageURI(imageUri);
+                    }
+                }
+            }
+    );
+
+    //파이어베이스 이미지 업로드
+    private void uploadToFirebase(Uri uri) {
+
+        StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri.toString()));
+
+        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                fileRef.getDownloadUrl().
+                        addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // 나중에 접근 가능한 uri를 db에 넣자!
+                                Log.d("이미지 파일 업로드 성공 !!", uri.toString());
+
+                                img = uri.toString();
+
+                                // uri를 img에 string으로 저장
+                                // 이후, uri를 포함하여 db에 insert
+                                //프로그래스바 숨김
+
+                                progressBar.setVisibility(View.GONE);
+                                Toast.makeText(WritingBoardActivity.this, "업로드 성공", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                //프로그래스바 보여주기
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //프로그래스바 숨김
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(WritingBoardActivity.this, "업로드 실패", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 } //WritingBoardActivity

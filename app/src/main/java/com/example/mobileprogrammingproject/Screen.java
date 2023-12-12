@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.units.qual.C;
 import org.w3c.dom.Comment;
@@ -39,14 +40,14 @@ public class Screen extends AppCompatActivity {
 
     DatabaseReference databaseReference;
     String user_id, nickname, post_id;
-    String Title, Content, StartTime, StartDate, EndTime, EndDate, Location;
+    String Title, Content, StartTime, StartDate, EndTime, EndDate, Location, img;
 
     String StartDateTime, EndDateTime;
     TextView title_tv, contents_tv, nickname_tv, StartDateTime_tv, EndDateTime_tv, location_tv;
     EditText comment_et;
     FirebaseFirestore db;
     Intent intent;
-    ImageView send_iv;
+    ImageView send_iv, img_iv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,7 @@ public class Screen extends AppCompatActivity {
         location_tv = findViewById(R.id.location_tv);
         send_iv = findViewById(R.id.send_iv);
         comment_et = findViewById(R.id.comment_et);
+        img_iv = findViewById(R.id.img_iv);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,6 +87,8 @@ public class Screen extends AppCompatActivity {
                             EndDate = documentSnapshot.getString("EndDate");
                             EndTime = documentSnapshot.getString("EndTime");
                             Location = documentSnapshot.getString("Location");
+                            img = documentSnapshot.getString("ImageURL");
+
                             // 게시글 정보 불러오고, user_id 바탕으로 nickname 가져오기.
                             db.collection("user").document(user_id).get()
                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -100,6 +104,10 @@ public class Screen extends AppCompatActivity {
                                             location_tv.setText(Location);
                                             StartDateTime_tv.setText(StartDateTime);
                                             EndDateTime_tv.setText(EndDateTime);
+
+                                            Picasso.get()
+                                                    .load(img)
+                                                    .into(img_iv);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {

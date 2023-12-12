@@ -74,5 +74,7 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'// 파이어베이스. 로그인, 회원가입에 활용
     implementation 'com.google.firebase:firebase-auth:22.3.0' // 파이어베이스. 로그인, 회원가입에 활용
-    implementation 'com.google.firebase:firebase-firestore:23.0.3' // 파이어 스토어
+    implementation 'com.google.firebase:firebase-storage:20.3.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 }
