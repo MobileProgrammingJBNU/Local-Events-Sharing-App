@@ -216,7 +216,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="내가 남긴 댓글"
+                android:text="내가 댓글을 남긴 글"
                 android:textColor="@color/black" />
         </TableRow>
 

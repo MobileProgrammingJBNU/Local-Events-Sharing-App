@@ -9,15 +9,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.ValueAnimator;
-import android.os.Bundle;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,23 +21,17 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Comment;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.example.mobileprogrammingproject.Screen.CommentAdapter;
 
 
 public class Screen extends AppCompatActivity {
@@ -234,8 +222,8 @@ public class Screen extends AppCompatActivity {
 
 
                                         Map<String, Object> comments = new HashMap<>();
-                                        comments.put("userID", user_id);
-                                        comments.put("postID", post_id);
+                                        comments.put("UserID", user_id);
+                                        comments.put("PostID", post_id);
                                         comments.put("comment", comment);
                                         comments.put("nickname", nickname);
 
@@ -325,7 +313,7 @@ public class Screen extends AppCompatActivity {
 
         if (user_id != null) {
             // 현재 사용자가 로그인되어 있을 때만 실행
-            String postId = post_id; // 게시글의 고유 아이디
+            String PostID = post_id; // 게시글의 고유 아이디
 
             // "favorites" 컬렉션에 즐겨찾기 정보 추가
             CollectionReference favoritesCollection = db.collection("favorites");
@@ -342,7 +330,7 @@ public class Screen extends AppCompatActivity {
 
         if (uid != null) {
             // 현재 사용자가 로그인되어 있을 때만 실행
-            String postId = post_id; // 게시글의 고유 아이디
+            String PostID = post_id; // 게시글의 고유 아이디
 
             // "favorites" 컬렉션에서 즐겨찾기 정보 삭제
             CollectionReference favoritesCollection = db.collection("favorites");
@@ -355,34 +343,29 @@ public class Screen extends AppCompatActivity {
         }
     }
     public static class Favorite {
-        private String postId;
-        private String userId;
+        private String PostID;
+        private String UserID;
 
         public Favorite() {
             // 기본 생성자가 필요합니다.
         }
 
-        public Favorite(String postId, String userId) {
-            this.postId = postId;
-            this.userId = userId;
+        public Favorite(String PostID, String UserID) {
+            this.PostID = PostID;
+            this.UserID = UserID;
         }
 
-        public String getPostId() {
-            return postId;
+        public String getPostID() {
+            return PostID;
         }
 
-        public String getUserId() {
-            return userId;
+        public String getUserID() {
+            return UserID;
         }
     }
     public void onBackPressed() {
         super.onBackPressed();
         // 여기에 원하는 동작을 추가하세요
-
-        // 원래의 뒤로가기 동작을 유지하고 싶다면 super.onBackPressed()를 호출하세요.
-        Intent intent = new Intent(Screen.this, MainPageActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void checkFavoriteStatus() {

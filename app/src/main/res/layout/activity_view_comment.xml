@@ -16,11 +16,19 @@
         android:background="#EEEEEE"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:title="내가 남긴 댓글"
+        app:title="내가 댓글을 남긴 글"
         app:titleTextAppearance="@style/ToolbarTitleText" />
 
     <View
         android:background="#D3D3D3"
         android:layout_width="match_parent"
         android:layout_height="2px" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myPost_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EEEEEE"
+        android:layout_marginTop="2dp"/>
+
 </LinearLayout>
