@@ -99,7 +99,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapView.setMapViewEventListener(this);
 
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        mapView.setShowCurrentLocationMarker(true);
 
         fetchDataFromFirestore();
 
@@ -131,7 +130,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             public void onClick(View v) {
                 // Move the map to the user's current location
                 mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-                mapView.setShowCurrentLocationMarker(true);
             }
         });
 

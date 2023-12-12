@@ -105,6 +105,7 @@ public class Screen extends AppCompatActivity {
                                             StartDateTime_tv.setText(StartDateTime);
                                             EndDateTime_tv.setText(EndDateTime);
 
+
                                             Picasso.get()
                                                     .load(img)
                                                     .into(img_iv);
