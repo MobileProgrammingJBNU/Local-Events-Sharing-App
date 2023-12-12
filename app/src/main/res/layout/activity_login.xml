@@ -39,7 +39,7 @@
             android:drawableLeft="@drawable/baseline_person_24"
             android:hint=" 아이디"
             android:padding="5dp"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:text="" />
 
         <EditText

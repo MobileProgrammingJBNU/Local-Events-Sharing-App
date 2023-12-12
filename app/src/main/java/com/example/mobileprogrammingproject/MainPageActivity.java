@@ -268,9 +268,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                             marker.setCustomImageResourceId(R.drawable.marker);
                             marker.setCustomImageAutoscale(false);
                             marker.setCustomImageAnchor(0.5f, 1.0f);
-
                             marker.setUserObject(document.getData());
-
                             // 마커에 클릭 리스너 추가
                             mapView.addPOIItem(marker);
                         }
@@ -312,12 +310,11 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private void showMarkerDetails(MapPOIItem mapPOIItem) {
         // 마커에서 정보 추출
         Map<String, Object> markerData = (Map<String, Object>) mapPOIItem.getUserObject();
-        String id = (String) markerData.get("id");
-
+        String post_id = (String) markerData.get("PostID"); // PostID 가져오기. 정상작동 확인했음.
 
         // Screen 액티비티 시작 및 Intent를 사용하여 정보 전달
         Intent intent = new Intent(MainPageActivity.this, Screen.class);
-        intent.putExtra("id", id);
+        intent.putExtra("post_id", post_id);
 
         startActivity(intent);
     }

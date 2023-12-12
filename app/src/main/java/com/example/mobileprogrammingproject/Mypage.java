@@ -1,5 +1,6 @@
 package com.example.mobileprogrammingproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -15,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -62,7 +64,16 @@ public class Mypage extends AppCompatActivity {
                                     nickname_tv.setText(nickname);
                                 }
                             }
-                        });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Mypage.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                });
+
+
+
         changeButton.setOnClickListener(new View.OnClickListener(){  // 프로필 수정 버튼 클릭 시, 액티비티 이동
             public void onClick(View v){
                 Intent intent = new Intent(getApplicationContext(), ProfileChange.class);
@@ -122,4 +133,10 @@ public class Mypage extends AppCompatActivity {
         animator.start();
     }
 
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Mypage.this, MainPageActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

@@ -21,39 +21,6 @@
     </androidx.appcompat.widget.Toolbar>
 
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/back"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1.7"-->
-<!--                android:text="back"-->
-<!--                android:textColor="#00ADB5"-->
-<!--                android:textSize="20dp" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/signup"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:layout_weight="2"-->
-<!--                android:text="회원 가입"-->
-<!--                android:textColor="#00ADB5"-->
-<!--                android:textSize="25dp" />-->
-<!--        </LinearLayout>-->
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -106,7 +73,7 @@
                 android:background="@drawable/custom_rounded"
                 android:ems="10"
                 android:hint="이메일"
-                android:inputType="textPersonName"
+                android:inputType="textEmailAddress"
                 android:text="" />
 
             <TextView

@@ -3,92 +3,175 @@ package com.example.mobileprogrammingproject;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.checkerframework.checker.units.qual.C;
+import org.w3c.dom.Comment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Screen extends AppCompatActivity {
-    ProgressBar progressBar;
     Toolbar toolbar;
 
     DatabaseReference databaseReference;
-    public static class Comment {
-        private String message;
-        private String userId;
-        private long timestamp;
+    String user_id, nickname, post_id;
+    String Title, Content, StartTime, StartDate, EndTime, EndDate, Location;
 
-        // Default constructor required for calls to DataSnapshot.getValue(Comment.class)
-        public Comment() {
-        }
-
-        public Comment(String message, long timestamp, String userId) {
-            this.message = message;
-            this.timestamp = timestamp;
-            this.userId = userId;
-        }
-    }
-
-
+    String StartDateTime, EndDateTime;
+    TextView title_tv, contents_tv, nickname_tv, StartDateTime_tv, EndDateTime_tv, location_tv;
+    EditText comment_et;
+    FirebaseFirestore db;
+    Intent intent;
+    ImageView send_iv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen);
-        progressBar = findViewById(R.id.progressBar);
-        animateProgressBar(36); // 원하는 프로그래스 값으로 애니메이션 실행
+
+        title_tv = findViewById(R.id.title_tv);
+        contents_tv = findViewById(R.id.contents_tv);
+        nickname_tv = findViewById(R.id.nickname_tv);
+        StartDateTime_tv = findViewById(R.id.startDateTime_tv);
+        EndDateTime_tv = findViewById(R.id.endDateTime_tv);
+        location_tv = findViewById(R.id.location_tv);
+        send_iv = findViewById(R.id.send_iv);
+        comment_et = findViewById(R.id.comment_et);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
+        intent = getIntent();
 
-        FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-       // databaseReference-firebaseDatabase.getReference("comments");
-        Button send = findViewById(R.id.comment_btn_send);
-        EditText comment_text = findViewById(R.id.comment_edit_message);
-        send.setOnClickListener(new View.OnClickListener() {
+        post_id = intent.getStringExtra("post_id"); // MainPage에서 넘겨준 마커의 post_id를 가져오기.
+
+        db = FirebaseFirestore.getInstance();
+
+        db.collection("posts").document(post_id).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            user_id = documentSnapshot.getString("UserID");
+                            Title = documentSnapshot.getString("Title");
+                            Content = documentSnapshot.getString("Content");
+                            StartDate = documentSnapshot.getString("StartDate");
+                            StartTime = documentSnapshot.getString("StartTime");
+                            EndDate = documentSnapshot.getString("EndDate");
+                            EndTime = documentSnapshot.getString("EndTime");
+                            Location = documentSnapshot.getString("Location");
+                            // 게시글 정보 불러오고, user_id 바탕으로 nickname 가져오기.
+                            db.collection("user").document(user_id).get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            nickname = documentSnapshot.getString("nickname");
+                                            StartDateTime = StartDate + "  " +StartTime;
+                                            EndDateTime = EndDate + "  " + EndTime;
+
+                                            // nickname 가져 왔으면, 화면에 반영
+                                            nickname_tv.setText(nickname);
+                                            title_tv.setText(Title);
+                                            location_tv.setText(Location);
+                                            StartDateTime_tv.setText(StartDateTime);
+                                            EndDateTime_tv.setText(EndDateTime);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(Screen.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Screen.this, "게시글 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        send_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = comment_text.getText().toString();
-                long timestamp = System.currentTimeMillis(); // 밀리초 단위 현재 시간
-               // String userId = //bd에서 유저id가져오기
+                if(comment_et.getText().length() != 0) { // 댓글이 비어있지 않다면, db에 삽입
+                    String user_id = FirebaseAuth.getInstance().getUid();
 
-                       // saveCommentToFirebase(userId, timestamp, message);
+                    db.collection("user").document(user_id).get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()){
+                                        String nickname = documentSnapshot.getString("nickname"); // 닉네임을 가져온 후, 댓글을 db에 insert 할 것임.
+                                        String comment = comment_et.getText().toString();
+
+
+                                        Map<String, Object> comments = new HashMap<>();
+                                        comments.put("userID", user_id);
+                                        comments.put("postID", post_id);
+                                        comments.put("comment", comment);
+                                        comments.put("nickname", nickname);
+
+                                        db.collection("comments")
+                                                .add(comments)
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
+                                                        Intent intent = new Intent(Screen.this, Screen.class);
+                                                        intent.putExtra("post_id", post_id);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Screen.this, "댓글 작성이 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(Screen.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    Toast.makeText(Screen.this, "댓글은 비어있을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
-    private void saveCommentToFirebase(String userId, long timestamp, String message) {
-        String commentId = databaseReference.push().getKey();
-        Comment comment = new Comment(userId, timestamp, message);
-        databaseReference.child(commentId).setValue(comment);
-    }
 
-    private void animateProgressBar(int targetProgress) {
-        ValueAnimator animator = ValueAnimator.ofInt(0, targetProgress);
-        animator.setDuration(500); // 애니메이션 기간 (1초로 설정, 필요에 따라 조절)
 
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int progress = (int) animation.getAnimatedValue();
-                progressBar.setProgress(progress);
-            }
-        });
-
-        animator.start();
-    }
     public void onBackPressed() {
         super.onBackPressed();
         // 여기에 원하는 동작을 추가하세요
