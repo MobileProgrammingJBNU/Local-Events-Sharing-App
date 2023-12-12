@@ -39,7 +39,7 @@
             android:background="@drawable/custom_rounded"
             android:ems="10"
             android:drawableLeft="@drawable/baseline_person_24"
-            android:hint=" 아이디"
+            android:hint=" 이메일"
             android:padding="5dp"
             android:inputType="textPersonName"
             android:text="" />
