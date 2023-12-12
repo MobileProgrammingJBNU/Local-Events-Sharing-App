@@ -306,8 +306,12 @@ public class Screen extends AppCompatActivity {
             CollectionReference favoritesCollection = db.collection("favorites");
             DocumentReference documentReference = favoritesCollection.document(user_id + "_" + post_id);
 
+            Map<String, String> favoritesData = new HashMap<>();
+            favoritesData.put("PostID", post_id);
+            favoritesData.put("UserID", user_id);
+
             // 즐겨찾기 정보 추가
-            documentReference.set(new Favorite(post_id, user_id))
+            documentReference.set(favoritesData)
                     .addOnSuccessListener(aVoid -> showToast("즐겨찾기에 추가됐습니다"))
                     .addOnFailureListener(e -> showToast("즐겨찾기 추가 실패: " + e.getMessage()));
         }
@@ -329,27 +333,7 @@ public class Screen extends AppCompatActivity {
                     .addOnFailureListener(e -> showToast("즐겨찾기 해제 실패: " + e.getMessage()));
         }
     }
-    public static class Favorite {
-        private String PostID;
-        private String UserID;
 
-        public Favorite() {
-            // 기본 생성자가 필요합니다.
-        }
-
-        public Favorite(String PostID, String UserID) {
-            this.PostID = PostID;
-            this.UserID = UserID;
-        }
-
-        public String getPostID() {
-            return PostID;
-        }
-
-        public String getUserID() {
-            return UserID;
-        }
-    }
     public void onBackPressed() {
         super.onBackPressed();
         // 여기에 원하는 동작을 추가하세요
