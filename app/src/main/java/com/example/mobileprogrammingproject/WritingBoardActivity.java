@@ -280,6 +280,9 @@ public class WritingBoardActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 });
+                        Intent intent = new Intent(WritingBoardActivity.this, Screen.class);
+                        intent.putExtra("post_id", post_id);
+                        startActivity(intent); // 인텐트로 게시글 id를 screen으로 넘겨주는 코드
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

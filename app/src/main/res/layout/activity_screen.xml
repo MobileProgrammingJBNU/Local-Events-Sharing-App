@@ -29,6 +29,18 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/star"
+            android:layout_gravity="right"
+            android:clickable="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/star_blank"
+            android:onClick="onStarClick" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <View
@@ -229,6 +241,12 @@
                 android:text="댓글"
                 android:textColor="@color/black" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewComments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/comment_view" />
 
         </LinearLayout>
 

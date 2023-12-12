@@ -6,12 +6,17 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,18 +27,23 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-import org.checkerframework.checker.units.qual.C;
 import org.w3c.dom.Comment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.example.mobileprogrammingproject.Screen.CommentAdapter;
 
 
 public class Screen extends AppCompatActivity {
@@ -47,9 +57,74 @@ public class Screen extends AppCompatActivity {
     TextView title_tv, contents_tv, nickname_tv, StartDateTime_tv, EndDateTime_tv, location_tv;
     EditText comment_et;
     FirebaseFirestore db;
+    FirebaseAuth auth;
     Intent intent;
     ImageView send_iv, img_iv;
     ProgressBar progressBar;
+
+    private ImageView starImageView;
+    private boolean isFavorite = false;
+    private RecyclerView recyclerView;
+    private CommentAdapter commentAdapter;
+    private List<Comment> commentList;
+
+    public static class Comment {
+        private String commenterName;
+        private String commentText;
+
+        public String getCommenterName() {
+            return commenterName;
+        }
+
+        public void setCommenterName(String commenterName) {
+            this.commenterName = commenterName;
+        }
+
+        public String getCommentText() {
+            return commentText;
+        }
+
+        public void setCommentText(String commentText) {
+            this.commentText = commentText;
+        }
+    }
+    public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+        private List<Comment> commentList;
+
+        public CommentAdapter(List<Comment> commentList) {
+            this.commentList = commentList;
+        }
+
+        @NonNull
+        @Override
+        public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_view, parent, false);
+            return new CommentViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
+            Comment comment = commentList.get(position);
+            holder.commenterNameTextView.setText(comment.getCommenterName());
+            holder.commentTextView.setText(comment.getCommentText());
+        }
+
+        @Override
+        public int getItemCount() {
+            return commentList.size();
+        }
+
+        public class CommentViewHolder extends RecyclerView.ViewHolder {
+            public TextView commenterNameTextView;
+            public TextView commentTextView;
+
+            public CommentViewHolder(@NonNull View itemView) {
+                super(itemView);
+                commenterNameTextView = itemView.findViewById(R.id.txtUser_id);
+                commentTextView = itemView.findViewById(R.id.txtUser_content);
+            }
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +140,7 @@ public class Screen extends AppCompatActivity {
         comment_et = findViewById(R.id.comment_et);
         img_iv = findViewById(R.id.img_iv);
         progressBar = findViewById(R.id.progress_view);
+        starImageView = findViewById(R.id.star);
 
         progressBar.setVisibility(View.VISIBLE); // 로딩시 progressbar VISIBLE 으로 설정.
         toolbar = findViewById(R.id.toolbar);
@@ -73,10 +149,19 @@ public class Screen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
         intent = getIntent();
-
         post_id = intent.getStringExtra("post_id"); // MainPage에서 넘겨준 마커의 post_id를 가져오기.
 
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        checkFavoriteStatus();
+
+        recyclerView = findViewById(R.id.recyclerViewComments);
+        commentList = new ArrayList<>();
+        commentAdapter = new CommentAdapter(commentList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(commentAdapter);
 
         db.collection("posts").document(post_id).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -185,11 +270,140 @@ public class Screen extends AppCompatActivity {
                 }
             }
         });
+
+        starImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStarClick(v);
+            }
+        });
+
+        send_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 댓글 추가 로직...
+
+                // Comment 객체를 생성하고 commentList에 추가
+                Comment newComment = new Comment();
+                newComment.setCommenterName("작성자 이름");
+                newComment.setCommentText(comment_et.getText().toString());
+
+                commentList.add(newComment);
+
+                // RecyclerView에 데이터 변경을 알림
+                commentAdapter.notifyDataSetChanged();
+
+                // 기존 댓글 작성 로직...
+            }
+        });
+
     }
 
+    public void onStarClick(View view) {
+        // 즐겨찾기 상태 토글
+        isFavorite = !isFavorite;
 
+        // UI 업데이트
+        updateFavoriteUI();
+    }
+    private void updateFavoriteUI() {
+        // UI를 업데이트하는 코드
+        if (isFavorite) {
+            starImageView.setImageResource(R.drawable.star);
+            // 파이어베이스에 즐겨찾기 정보 추가
+            addToFavorites();
+        } else {
+            starImageView.setImageResource(R.drawable.star_blank);
+            // 파이어베이스에서 즐겨찾기 정보 제거
+            removeFromFavorites();
+        }
+    }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+    private void addToFavorites() {
+
+        if (user_id != null) {
+            // 현재 사용자가 로그인되어 있을 때만 실행
+            String postId = post_id; // 게시글의 고유 아이디
+
+            // "favorites" 컬렉션에 즐겨찾기 정보 추가
+            CollectionReference favoritesCollection = db.collection("favorites");
+            DocumentReference documentReference = favoritesCollection.document(user_id + "_" + post_id);
+
+            // 즐겨찾기 정보 추가
+            documentReference.set(new Favorite(post_id, user_id))
+                    .addOnSuccessListener(aVoid -> showToast("즐겨찾기에 추가됐습니다"))
+                    .addOnFailureListener(e -> showToast("즐겨찾기 추가 실패: " + e.getMessage()));
+        }
+    }
+    private void removeFromFavorites() {
+        String uid = FirebaseAuth.getInstance().getUid();
+
+        if (uid != null) {
+            // 현재 사용자가 로그인되어 있을 때만 실행
+            String postId = post_id; // 게시글의 고유 아이디
+
+            // "favorites" 컬렉션에서 즐겨찾기 정보 삭제
+            CollectionReference favoritesCollection = db.collection("favorites");
+            DocumentReference documentReference = favoritesCollection.document(uid + "_" + post_id);
+
+            // 즐겨찾기 정보 삭제
+            documentReference.delete()
+                    .addOnSuccessListener(aVoid -> showToast("즐겨찾기가 해제되었습니다"))
+                    .addOnFailureListener(e -> showToast("즐겨찾기 해제 실패: " + e.getMessage()));
+        }
+    }
+    public static class Favorite {
+        private String postId;
+        private String userId;
+
+        public Favorite() {
+            // 기본 생성자가 필요합니다.
+        }
+
+        public Favorite(String postId, String userId) {
+            this.postId = postId;
+            this.userId = userId;
+        }
+
+        public String getPostId() {
+            return postId;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+    }
     public void onBackPressed() {
         super.onBackPressed();
+        // 여기에 원하는 동작을 추가하세요
+
+        // 원래의 뒤로가기 동작을 유지하고 싶다면 super.onBackPressed()를 호출하세요.
+        Intent intent = new Intent(Screen.this, MainPageActivity.class);
+        startActivity(intent);
+        finish();
     }
+
+    private void checkFavoriteStatus() {
+        // "favorites" 컬렉션에서 해당 게시글이 존재하는지 확인
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid != null) {
+            DocumentReference favoriteDocRef = db.collection("favorites").document(uid + "_" + post_id);
+            favoriteDocRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // 해당 게시글이 즐겨찾기에 추가되어 있음
+                        isFavorite = true;
+                        updateFavoriteUI();
+                    }
+                }
+            });
+        }
+    }
+
+
+
 }
 
