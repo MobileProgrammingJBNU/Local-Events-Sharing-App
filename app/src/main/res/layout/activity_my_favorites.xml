@@ -27,6 +27,6 @@
         android:id="@+id/favorites_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
+        android:background="#EEEEEE"
         android:layout_marginTop="2dp"/>
 </LinearLayout>
