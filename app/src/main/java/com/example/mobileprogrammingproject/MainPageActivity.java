@@ -1,6 +1,7 @@
 package com.example.mobileprogrammingproject;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -46,6 +47,9 @@ import java.util.Map;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class MainPageActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener {
@@ -55,7 +59,9 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private BottomNavigationView bottomNavigationView;
     private Button btnWritePost;
     private Throwable e;
+    private Button btnMoveToMyLocation;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,9 +122,20 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             }
         });
 
+        btnMoveToMyLocation = findViewById(R.id.btnMoveToMyLocation);
+
+        btnMoveToMyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Move the map to the user's current location
+                moveToCurrentLocation();
+            }
+        });
+
         btnWritePost = findViewById(R.id.btnWritePost);
         btnWritePost.setVisibility(View.GONE);
 
+        /*
         MapPolyline polyline = new MapPolyline();
         polyline.setTag(1000);
         polyline.setLineColor(Color.argb(128, 255, 51, 0));
@@ -132,6 +149,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         MapPointBounds mapPointBounds = new MapPointBounds(polyline.getMapPoints());
         int padding = 100;
         mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
+        */
 
         mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -228,6 +246,10 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         // 로그에 위치 정보 및 주소(장소명) 표시
         Log.d("클릭한 위치 정보", "위도: " + lat + ", 경도: " + lng + ", 주소: " + locationName);
     }
+
+    private void moveToCurrentLocation() {
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+    }
     private String getAddressFromCoordinates(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -243,6 +265,8 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             return null;
         }
     }
+
+
     private void fetchDataFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -306,7 +330,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                     }
                 });
     }
-
 
 
     private void showMarkerDetails(MapPOIItem mapPOIItem) {
