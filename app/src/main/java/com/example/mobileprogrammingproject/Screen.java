@@ -1,37 +1,37 @@
 package com.example.mobileprogrammingproject;
 
-import android.content.Intent;
-import android.os.Bundle;
+        import android.content.Intent;
+        import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.annotation.NonNull;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.appcompat.widget.Toolbar;
+        import androidx.recyclerview.widget.LinearLayoutManager;
+        import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.ProgressBar;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
+        import com.google.android.gms.tasks.OnFailureListener;
+        import com.google.android.gms.tasks.OnSuccessListener;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.firestore.CollectionReference;
+        import com.google.firebase.firestore.DocumentReference;
+        import com.google.firebase.firestore.DocumentSnapshot;
+        import com.google.firebase.firestore.FirebaseFirestore;
+        import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+        import java.util.ArrayList;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
 
 
 public class Screen extends AppCompatActivity {
@@ -151,6 +151,8 @@ public class Screen extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(commentAdapter);
 
+        loadComments();
+
         db.collection("posts").document(post_id).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -246,7 +248,7 @@ public class Screen extends AppCompatActivity {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         Toast.makeText(Screen.this, "댓글 작성이 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                                                       }
+                                                    }
                                                 });
                                     }
                                 }
@@ -354,8 +356,37 @@ public class Screen extends AppCompatActivity {
             });
         }
     }
+    private void loadComments() {
+        commentList.clear(); // 기존 댓글 리스트 초기화
 
+        // 해당 게시물의 댓글을 Firestore에서 가져오기
+        db.collection("comments")
+                .whereEqualTo("PostID", post_id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        // 필드 이름이 일치하도록 수정
+                        String userID = document.getString("UserID");
+                        String postID = document.getString("PostID");
+                        String commentText = document.getString("comment");
+                        String commenterName = document.getString("nickname");
 
+                        // Comment 객체 생성
+                        Comment comment = new Comment();
+                        comment.setCommenterName(commenterName);
+                        comment.setCommentText(commentText);
+                        // Comment 객체를 리스트에 추가
+                        commentList.add(comment);
+                    }
+
+                    // 댓글 목록이 변경되었음을 어댑터에 알려 갱신
+                    commentAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    // 댓글 불러오기 실패 시 처리
+                    Toast.makeText(Screen.this, "댓글 불러오기 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
 
 }
 
