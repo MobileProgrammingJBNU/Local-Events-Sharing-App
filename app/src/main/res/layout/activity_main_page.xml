@@ -36,7 +36,7 @@
             android:paddingTop="25dp"
             android:paddingBottom="25dp"
             android:textSize="20sp"
-            android:textStyle="bold"ㅎ
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:inputType="textMultiLine"
             android:text="게시글을 추가할 위치를 선택해주세요."
