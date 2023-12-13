@@ -36,10 +36,10 @@
             android:paddingTop="25dp"
             android:paddingBottom="25dp"
             android:textSize="20sp"
-            android:textStyle="bold"
+            android:textStyle="bold"ㅎ
             android:textColor="@color/black"
             android:inputType="textMultiLine"
-            android:text="가나다라"
+            android:text="게시글을 추가할 위치를 선택해주세요."
             />
         <View
             android:layout_width="match_parent"
