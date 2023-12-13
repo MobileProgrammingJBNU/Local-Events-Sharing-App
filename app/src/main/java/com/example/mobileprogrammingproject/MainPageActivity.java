@@ -49,6 +49,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -60,6 +62,8 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private Button btnWritePost;
     private Throwable e;
     private Button btnMoveToMyLocation;
+
+    private TextView tvLocationName;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -97,23 +101,23 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         mapViewContainer = findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
-
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
         fetchDataFromFirestore();
 
+        //하단 네비게이션
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.tab_write) {
-                    showLocationSelectionDialog();
+                    showLocationSelectionDialog(); // 작성 눌렀을 시
                     return true;
                 } else if (itemId == R.id.tab_refresh) {
-                    fetchDataFromFirestore(); // 조회버튼 눌렀을 때
+                    fetchDataFromFirestore(); // 조회 눌렀을 시
                     return true;
-                } else if (itemId == R.id.tab_user) {
+                } else if (itemId == R.id.tab_user) { //마이페이지 눌렀을 시
                     Intent intent = new Intent(MainPageActivity.this, Mypage.class);
                     startActivity(intent);
                     return true;
@@ -122,76 +126,27 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 }
             }
         });
+        //TextView
+        tvLocationName = findViewById(R.id.tvMyTextView);
 
-        btnMoveToMyLocation = findViewById(R.id.btnMoveToMyLocation);
+            /*btnMoveToMyLocation = findViewById(R.id.btnMoveToMyLocation);
 
-        btnMoveToMyLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Move the map to the user's current location
-                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-            }
-        });
-
-        btnWritePost = findViewById(R.id.btnWritePost);
-        btnWritePost.setVisibility(View.GONE);
-
-        /*
-        MapPolyline polyline = new MapPolyline();
-        polyline.setTag(1000);
-        polyline.setLineColor(Color.argb(128, 255, 51, 0));
-
-        polyline.addPoint(MapPoint.mapPointWithGeoCoord(37.479928, 126.900169));
-        polyline.addPoint(MapPoint.mapPointWithGeoCoord(37.480624, 126.900735));
-        polyline.addPoint(MapPoint.mapPointWithGeoCoord(37.481667, 126.900713));
-
-        mapView.addPolyline(polyline);
-
-        MapPointBounds mapPointBounds = new MapPointBounds(polyline.getMapPoints());
-        int padding = 100;
-        mapView.moveCamera(CameraUpdateFactory.newMapPointBounds(mapPointBounds, padding));
-        */
-
-        mapView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-            }
-        });
-    }
-
-    private void showLocationSelectionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("위치 지정하시오");
-
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                MapPoint centerMapPoint = mapView.getMapCenterPoint();
-
-                if (marker != null) {
-                    mapView.removePOIItem(marker);
+            btnMoveToMyLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Move the map to the user's current location
+                    moveToCurrentLocation();
                 }
+            });
+             */
 
-                marker = new MapPOIItem();
-                marker.setItemName("행사 이름");
-                marker.setTag(1);
-                marker.setMapPoint(centerMapPoint);
-                marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
-                marker.setCustomImageResourceId(R.drawable.marker);
-                marker.setCustomImageAutoscale(false);
-                marker.setCustomImageAnchor(0.5f, 1.0f);
-
-                mapView.addPOIItem(marker);
-
-                btnWritePost.setVisibility(View.VISIBLE);
-
-                // 역 지오코딩을 통해 주소(장소명) 가져오기
-                getAddressFromCoordinates(centerMapPoint.getMapPointGeoCoord().latitude, centerMapPoint.getMapPointGeoCoord().longitude);
+        mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+                return false;
             }
         });
-
-        builder.create().show();
     }
 
 
@@ -245,11 +200,13 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
 
         // 로그에 위치 정보 및 주소(장소명) 표시
         Log.d("클릭한 위치 정보", "위도: " + lat + ", 경도: " + lng + ", 주소: " + locationName);
+
+        if (tvLocationName != null) {
+            tvLocationName.setText(locationName);
+        }
+
     }
 
-    private void moveToCurrentLocation() {
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-    }
     private String getAddressFromCoordinates(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -276,13 +233,12 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // mapView.setPOIItemEventListener(null); // 기존 리스너 제거 (이 부분은 주석 처리할 수 있습니다.)
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             double latitude = Double.parseDouble(document.getString("Latitude"));
                             double longitude = Double.parseDouble(document.getString("Longitude"));
                             String title = document.getString("Title");
-                            String id = document.getString("id");
+                            String id = document.getString("PostID");
 
                             MapPOIItem marker = new MapPOIItem();
                             marker.setItemName(title);
@@ -292,7 +248,9 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                             marker.setCustomImageResourceId(R.drawable.marker);
                             marker.setCustomImageAutoscale(false);
                             marker.setCustomImageAnchor(0.5f, 1.0f);
+
                             marker.setUserObject(document.getData());
+
                             // 마커에 클릭 리스너 추가
                             mapView.addPOIItem(marker);
                         }
@@ -333,16 +291,76 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private void showMarkerDetails(MapPOIItem mapPOIItem) {
         // 마커에서 정보 추출
         Map<String, Object> markerData = (Map<String, Object>) mapPOIItem.getUserObject();
-        String post_id = (String) markerData.get("PostID"); // PostID 가져오기. 정상작동 확인했음.
+        String id = (String) markerData.get("PostID");
 
         // Screen 액티비티 시작 및 Intent를 사용하여 정보 전달
         Intent intent = new Intent(MainPageActivity.this, Screen.class);
-        intent.putExtra("post_id", post_id);
+        intent.putExtra("PostID", id);
 
         startActivity(intent);
     }
 
+    private void showLocationSelectionDialog() {
+        ViewGroup.LayoutParams mapLayoutParams = mapViewContainer.getLayoutParams();
+        mapLayoutParams.height = (int) getResources().getDimension(R.dimen.map_height_small);
+        mapViewContainer.setLayoutParams(mapLayoutParams);
 
+        // Show the new layout
+        LinearLayout writeLayout = findViewById(R.id.writeLayout);
+        writeLayout.setVisibility(View.VISIBLE);
+
+        // Get the button from the new layout
+        Button btnSetLocation = findViewById(R.id.btnMyButton);
+
+        MapPoint centerMapPoint = mapView.getMapCenterPoint();
+        if (marker != null) {
+            mapView.removePOIItem(marker);
+        }
+
+        marker = new MapPOIItem();
+        marker.setItemName("행사");
+        marker.setTag(1);
+        marker.setMapPoint(centerMapPoint);
+        marker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+        marker.setCustomImageResourceId(R.drawable.marker);
+        marker.setCustomImageAutoscale(false);
+        marker.setCustomImageAnchor(0.5f, 1.0f);
+
+        mapView.addPOIItem(marker);
+
+        // "이 위치로 설정" button 동작
+        btnSetLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (marker != null) {
+                    MapPoint markerMapPoint = marker.getMapPoint();
+                    double markerLatitude = markerMapPoint.getMapPointGeoCoord().latitude;
+                    double markerLongitude = markerMapPoint.getMapPointGeoCoord().longitude;
+
+                    // 역 지오코딩을 통해 주소(장소명) 가져오기
+                    String locationName = getAddressFromCoordinates(markerLatitude, markerLongitude);
+
+                    // Intent를 사용하여 WritingBoardActivity로 전환하면서 마커 위치 정보 및 주소(장소명) 전달
+                    Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
+                    intent.putExtra("markerLatitude", markerLatitude);
+                    intent.putExtra("markerLongitude", markerLongitude);
+                    intent.putExtra("locationName", locationName);
+
+                    startActivity(intent);
+                } else {
+                    // 마커가 없을 경우 처리 (예: 에러 메시지 표시 등)
+                    Toast.makeText(MainPageActivity.this, "마커를 먼저 찍어주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+         /*
+        private void moveToCurrentLocation() {
+            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        }
+         */
 
     @Override
     public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
@@ -369,54 +387,61 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         // ...
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        /*
+        @Override
+        protected void onResume() {
+            super.onResume();
 
-        btnWritePost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // "게시물 작성" 버튼이 클릭되었을 때 실행되는 부분
+            btnWritePost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // "게시물 작성" 버튼이 클릭되었을 때 실행되는 부분
 
-                // AlertDialog를 통해 확인 다이얼로그 표시
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainPageActivity.this);
-                builder.setMessage("이 주소로 설정");
+                    // AlertDialog를 통해 확인 다이얼로그 표시
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainPageActivity.this);
+                    builder.setMessage("이 주소로 설정");
 
-                // 확인 버튼 클릭 시의 동작 정의
-                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // "확인" 버튼이 클릭되었을 때 실행되는 부분
+                    // 확인 버튼 클릭 시의 동작 정의
+                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // "확인" 버튼이 클릭되었을 때 실행되는 부분
 
-                        // 마커의 위치 정보 가져오기
-                        MapPoint centerMapPoint = mapView.getMapCenterPoint();
-                        double markerLatitude = centerMapPoint.getMapPointGeoCoord().latitude;
-                        double markerLongitude = centerMapPoint.getMapPointGeoCoord().longitude;
+                            // 마커의 위치 정보 가져오기
+                            if (marker != null) {
+                                MapPoint markerMapPoint = marker.getMapPoint();
+                                double markerLatitude = markerMapPoint.getMapPointGeoCoord().latitude;
+                                double markerLongitude = markerMapPoint.getMapPointGeoCoord().longitude;
 
-                        // 역 지오코딩을 통해 주소(장소명) 가져오기
-                        String locationName = getAddressFromCoordinates(markerLatitude, markerLongitude);
+                                // 역 지오코딩을 통해 주소(장소명) 가져오기
+                                String locationName = getAddressFromCoordinates(markerLatitude, markerLongitude);
 
-                        // Intent를 사용하여 WritingBoardActivity로 전환하면서 마커 위치 정보 및 주소(장소명) 전달
-                        Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
-                        intent.putExtra("markerLatitude", markerLatitude);
-                        intent.putExtra("markerLongitude", markerLongitude);
-                        intent.putExtra("locationName", locationName);
+                                // Intent를 사용하여 WritingBoardActivity로 전환하면서 마커 위치 정보 및 주소(장소명) 전달
+                                Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
+                                intent.putExtra("markerLatitude", markerLatitude);
+                                intent.putExtra("markerLongitude", markerLongitude);
+                                intent.putExtra("locationName", locationName);
 
-                        startActivity(intent);
-                    }
-                });
+                                startActivity(intent);
+                            } else {
+                                // 마커가 없을 경우 처리 (예: 에러 메시지 표시 등)
+                                Toast.makeText(MainPageActivity.this, "마커를 먼저 찍어주세요.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
-                // 취소 버튼 클릭 시의 동작 정의
-                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
 
-                // AlertDialog 생성 및 표시
-                builder.create().show();
-            }
-        });
-    }
+                    // 취소 버튼 클릭 시의 동작 정의
+                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
+                    // AlertDialog 생성 및 표시
+                    builder.create().show();
+                }
+            });
+        }*/
 
 }

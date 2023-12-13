@@ -55,7 +55,7 @@ public class MyFavoritesActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        db.collection("favorites").whereEqualTo("userId", user_id).get() // 사용자가 작성한 post 가져오기
+        db.collection("favorites").whereEqualTo("UserID", user_id).get() // 사용자가 작성한 post 가져오기
 
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -65,9 +65,9 @@ public class MyFavoritesActivity extends AppCompatActivity {
                         postPreviews = new ArrayList<>();
 
                         for(QueryDocumentSnapshot doc : querySnapshot){
-                            String userId = doc.getString("userId");
+                            String userId = doc.getString("UserID");
                             //Title = doc.getString("Title");
-                            postId = doc.getString("postId");
+                            postId = doc.getString("PostID");
                             getUserNicknameAndTitle(userId, postId); // userNickname 및 title 가져오기
                         }
                     }

@@ -137,7 +137,7 @@ public class Screen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 툴바 왼쪽에, 뒤로가기 버튼 추가.
 
         intent = getIntent();
-        post_id = intent.getStringExtra("post_id"); // MainPage에서 넘겨준 마커의 post_id를 가져오기.
+        post_id = intent.getStringExtra("PostID"); // MainPage에서 넘겨준 마커의 post_id를 가져오기.
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -195,8 +195,6 @@ public class Screen extends AppCompatActivity {
                                             Toast.makeText(Screen.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
-
                         }
                     }
                 })

@@ -40,7 +40,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 String post_id = post.getPost_id();
                 //ChatActivity 이동
                 Intent intent = new Intent(context, Screen.class);
-                intent.putExtra("post_id", post_id);
+                intent.putExtra("PostID", post_id);
                 context.startActivity(intent);
             }
         });
