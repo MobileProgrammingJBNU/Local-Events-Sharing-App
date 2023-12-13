@@ -70,7 +70,7 @@ public class Screen extends AppCompatActivity {
 
         intent = getIntent();
 
-        post_id = intent.getStringExtra("post_id"); // MainPage에서 넘겨준 마커의 post_id를 가져오기.
+        post_id = intent.getStringExtra("PostID"); // MainPage에서 넘겨준 마커의 post_id를 가져오기.
 
         db = FirebaseFirestore.getInstance();
 

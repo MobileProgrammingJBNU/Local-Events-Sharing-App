@@ -1,60 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- 지도를 표시할 레이아웃 -->
     <FrameLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <!-- 우상단 버튼을 담을 레이아웃 -->
+    </FrameLayout>
+
+    <!-- 하단 네비게이션 -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/color4">
+        android:id="@+id/writeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <!-- 글 작성 버튼 -->
-        <Button
-            android:id="@+id/btnWritePost"
-            android:layout_width="wrap_content"
+        <View
+            android:background="#80D3D3D3"
+            android:layout_width="match_parent"
+            android:layout_height="3px" />
+        <!-- TextView -->
+        <TextView
+            android:id="@+id/tvMyTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="내용 입력"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:inputType="textMultiLine"
+            android:text="가나다라"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+        <!-- 버튼 -->
+        <Button
+            android:id="@+id/btnMyButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:textColor="@color/color4"
-            android:backgroundTint="@color/color2"
-            android:visibility="gone" />
-
-        <!-- 새로운 버튼 추가 -->
-        <Button
-            android:id="@+id/btnMoveToMyLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="내 위치로 이동"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/color2" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/color3"
+            android:text="이 위치로 설정"/>
 
     </LinearLayout>
 
-    <!-- 하단 네비게이션 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
-        app:menu="@menu/navi_menu"
         app:itemBackground="@color/color4"
         app:itemIconTint="@color/color1"
-        app:itemTextColor="@color/color1">
+        app:itemTextColor="@color/color1"
+        app:menu="@menu/navi_menu">
+
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-</RelativeLayout>
+
+    <!-- 새로운 레이아웃 -->
+</LinearLayout>
