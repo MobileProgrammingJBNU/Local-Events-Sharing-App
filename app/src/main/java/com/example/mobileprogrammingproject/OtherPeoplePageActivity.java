@@ -9,13 +9,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
 
 public class OtherPeoplePageActivity extends AppCompatActivity {
 
@@ -23,7 +29,7 @@ public class OtherPeoplePageActivity extends AppCompatActivity {
     String other_user_id;
     ProgressBar progressBar;
 
-    Button good_btn,bad_btn;
+    ImageView good_btn,bad_btn;
     //현재 temp값을 저장하는 변수
     int currentTemp;
 
@@ -152,26 +158,45 @@ public class OtherPeoplePageActivity extends AppCompatActivity {
 
     private void updateTempValue(int delta) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user").document(other_user_id)
+        db.collection("user").document(FirebaseAuth.getInstance().getUid()) // 현재 로그인한 사용자의 문서
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if(documentSnapshot.exists()){
-                            Number temp = documentSnapshot.getLong("temp");
-                            if (temp != null) {
-                                currentTemp = temp.intValue() + delta;
-                                db.collection("user").document(other_user_id)
-                                        .update("temp", currentTemp)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                animateProgressBar(currentTemp);
-                                            }
-                                        });
+                        if (documentSnapshot.exists()) {
+                            Long lastClickedDate = documentSnapshot.getLong("lastClickedDate");
+                            long currentDate = System.currentTimeMillis();
+
+                            if (lastClickedDate != null &&
+                                    isSameDay(lastClickedDate, currentDate)) {
+                                // 오늘 이미 클릭한 경우
+                                Toast.makeText(OtherPeoplePageActivity.this, "하루에 한 번만 누를 수 있습니다", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // 오늘 아직 클릭하지 않은 경우
+                                updateOtherUserTemp(delta, currentDate); // 다른 사용자의 temp 업데이트 및 현재 사용자의 lastClickedDate 업데이트
                             }
                         }
                     }
                 });
     }
+
+    private boolean isSameDay(long lastClickedTime, long currentTime) {
+        Calendar lastClickedCalendar = Calendar.getInstance();
+        lastClickedCalendar.setTimeInMillis(lastClickedTime);
+        Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.setTimeInMillis(currentTime);
+
+        return lastClickedCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                lastClickedCalendar.get(Calendar.DAY_OF_YEAR) == currentCalendar.get(Calendar.DAY_OF_YEAR);
+    }
+
+    private void updateOtherUserTemp(int delta, long currentDate) {
+        // 다른 사용자의 temp 업데이트 및 현재 사용자의 lastClickedDate 업데이트
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(other_user_id) // 다른 사용자의 문서
+                .update("temp", FieldValue.increment(delta));
+        db.collection("user").document(FirebaseAuth.getInstance().getUid()) // 현재 로그인한 사용자의 문서
+                .update("lastClickedDate", currentDate);
+    }
+
 }
