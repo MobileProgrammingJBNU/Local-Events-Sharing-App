@@ -141,6 +141,7 @@ public class Signup extends AppCompatActivity {
                                                         userMap.put(FirebaseID.password, pw);
                                                         userMap.put(FirebaseID.nickname, nickname);
                                                         userMap.put(FirebaseID.info, null); // 처음 자기소개는 null
+                                                        userMap.put("temp", 36); // 처음 temp 36
                                                         //현재 유저의 Uid를 이름으로 한 document 생성. 이게 없으면 사용자 컨텐츠의 이륾과 사용자id이름이 달라 사용하기 힘듬
                                                         mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge());
 
