@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +45,7 @@ import net.daum.mf.map.api.MapPolyline;
 import net.daum.mf.map.api.MapView;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -66,7 +68,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private ViewGroup mapViewContainer;
     private MapPOIItem marker;
     private BottomNavigationView bottomNavigationView;
-    private Button btnWritePost;
+
     private Throwable e;
     private ImageView btnMoveToMyLocation;
 
@@ -96,7 +98,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                     double longitude = location.getLongitude();
                     Log.d("Location Update", "Latitude: " + latitude + ", Longitude: " + longitude);
 
-                    // 여기서 위도(latitude)와 경도(longitude)를 사용할 수 있습니다.
                 }
             }
         };
@@ -190,16 +191,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         //TextView
         tvLocationName = findViewById(R.id.tvMyTextView);
 
-            /*btnMoveToMyLocation = findViewById(R.id.btnMoveToMyLocation);
 
-            btnMoveToMyLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Move the map to the user's current location
-                    moveToCurrentLocation();
-                }
-            });
-             */
 
         mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -409,6 +401,26 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         intent.putExtra("PostID", id);
 
         startActivity(intent);
+
+        mapPOIItem.setShowDisclosureButtonOnCalloutBalloon(false); // Remove disclosure button
+        mapPOIItem.setCustomCalloutBalloon(createCustomBalloonView(mapPOIItem.getItemName())); // Set custom balloon view
+
+        // ...
+
+        mapView.selectPOIItem(mapPOIItem, true);
+    }
+
+    private View createCustomBalloonView(String title) {
+        // Create a custom view for the balloon
+        View customBalloonView = getLayoutInflater().inflate(R.layout.custom_balloon_layout, null);
+
+        // Customize the TextView inside the balloon
+        TextView balloonTitle = customBalloonView.findViewById(R.id.balloonTitle);
+        balloonTitle.setText(title);
+        balloonTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16); // Set text size
+        balloonTitle.setTextColor(Color.BLACK); // Set text color
+
+        return customBalloonView;
     }
 
     private void showLocationSelectionDialog() {
@@ -465,13 +477,6 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
             }
         });
     }
-
-
-         /*
-        private void moveToCurrentLocation() {
-            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        }
-         */
 
     @Override
     public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
