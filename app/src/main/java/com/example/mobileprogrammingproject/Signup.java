@@ -60,6 +60,15 @@ public class Signup extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        
         //작성 항목
 
         mStore = FirebaseFirestore.getInstance(); // 파이어베이스 스토어
@@ -114,7 +123,7 @@ public class Signup extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                                                     if (task.isSuccessful()) {
-                                                        Toast.makeText(Signup.this, "회원가입 성공: ",
+                                                        Toast.makeText(Signup.this, "회원가입 성공",
                                                                 Toast.LENGTH_SHORT).show();
 
                                                         // Sign in success, update UI with the signed-in user's information
@@ -134,11 +143,10 @@ public class Signup extends AppCompatActivity {
 
                                                         startActivity(intent);
                                                         finish();
-
                                                     } else {
                                                         Exception exception = task.getException();
                                                         if (exception != null) {
-                                                            Toast.makeText(Signup.this, "회원가입 실패: " + exception.getMessage(),
+                                                            Toast.makeText(Signup.this, "회원가입 실패: ",
                                                                     Toast.LENGTH_SHORT).show();
                                                         } else {
                                                             Toast.makeText(Signup.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
