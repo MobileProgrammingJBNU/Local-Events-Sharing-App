@@ -29,14 +29,15 @@ public class Mypage extends AppCompatActivity {
     TableRow view_post_tr, view_comment_tr, favorites_tr, logout_tr;
     FirebaseFirestore db;
 
-    TextView nickname_tv;
+    TextView nickname_tv,personal_temp;
     String user_id, nickname;
     Toolbar toolbar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
         progressBar = findViewById(R.id.progressBar);
-        animateProgressBar(36); // 원하는 프로그래스 값으로 애니메이션 실행
+
+        personal_temp = findViewById(R.id.personal_temp);
 
         changeButton = findViewById(R.id.profileChange_btn); // 프로필 수정 버튼
 
@@ -56,23 +57,32 @@ public class Mypage extends AppCompatActivity {
 
 
         db.collection("user").document(user_id).get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                if(documentSnapshot.exists()){
-                                    nickname = documentSnapshot.getString("nickname");
-                                    nickname_tv.setText(nickname);
-                                }
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            nickname = documentSnapshot.getString("nickname");
+                            nickname_tv.setText(nickname);
+
+                            // temp 값을 불러와서 TextView에 표시
+                            Number tempNumber = documentSnapshot.getLong("temp");
+                            if (tempNumber != null) {
+                                personal_temp.setText(tempNumber.intValue() + "℃");
+                                int currentTemp = tempNumber.intValue();
+                                animateProgressBar(currentTemp);
+                            } else {
+                                // temp 필드가 없는 경우, 기본값 설정 ("0℃")
+                                personal_temp.setText("0℃");
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(Mypage.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Mypage.this, "유저 데이터 불러오기가 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 });
-
-
 
         changeButton.setOnClickListener(new View.OnClickListener(){  // 프로필 수정 버튼 클릭 시, 액티비티 이동
             public void onClick(View v){
