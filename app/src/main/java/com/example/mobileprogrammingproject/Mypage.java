@@ -109,12 +109,14 @@ public class Mypage extends AppCompatActivity {
             @Override
             public void onClick(View v) { // 파이어베이스 로그아웃 후, 로그인 화면으로 이동
                 FirebaseAuth.getInstance().signOut();
-                finish();
-
-                //Intent를 새로 만든 후 LoginActivity로 화면전환
+                //finish();
+//
+//                Intent intent = new Intent(Mypage.this, Login.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
                 Intent intent = new Intent(Mypage.this, Login.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
     }
