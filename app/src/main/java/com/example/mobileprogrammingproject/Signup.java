@@ -68,7 +68,7 @@ public class Signup extends AppCompatActivity {
             }
         });
 
-        
+
         //작성 항목
 
         mStore = FirebaseFirestore.getInstance(); // 파이어베이스 스토어
@@ -146,7 +146,7 @@ public class Signup extends AppCompatActivity {
                                                     } else {
                                                         Exception exception = task.getException();
                                                         if (exception != null) {
-                                                            Toast.makeText(Signup.this, "회원가입 실패: ",
+                                                            Toast.makeText(Signup.this, "회원가입 실패",
                                                                     Toast.LENGTH_SHORT).show();
                                                         } else {
                                                             Toast.makeText(Signup.this, "회원가입 실패", Toast.LENGTH_SHORT).show();

@@ -12,6 +12,7 @@ package com.example.mobileprogrammingproject;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.widget.Button;
         import android.widget.EditText;
         import android.widget.ImageView;
         import android.widget.ProgressBar;
@@ -38,7 +39,7 @@ public class Screen extends AppCompatActivity {
     Toolbar toolbar;
 
     DatabaseReference databaseReference;
-    String user_id, nickname, post_id;
+    String user_id, nickname, post_id, other_user_id;
     String Title, Content, StartTime, StartDate, EndTime, EndDate, Location, img;
 
     String StartDateTime, EndDateTime;
@@ -49,6 +50,7 @@ public class Screen extends AppCompatActivity {
     Intent intent;
     ImageView send_iv, img_iv;
     ProgressBar progressBar;
+    Button enterProfile_btn;
 
     private ImageView starImageView;
     private boolean isFavorite = false;
@@ -129,6 +131,7 @@ public class Screen extends AppCompatActivity {
         img_iv = findViewById(R.id.img_iv);
         progressBar = findViewById(R.id.progress_view);
         starImageView = findViewById(R.id.star);
+        enterProfile_btn = findViewById(R.id.enterProfile_btn);
 
         progressBar.setVisibility(View.VISIBLE); // 로딩시 progressbar VISIBLE 으로 설정.
         toolbar = findViewById(R.id.toolbar);
@@ -158,7 +161,7 @@ public class Screen extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if(documentSnapshot.exists()){
-                            user_id = documentSnapshot.getString("UserID");
+                            other_user_id = documentSnapshot.getString("UserID");
                             Title = documentSnapshot.getString("Title");
                             Content = documentSnapshot.getString("Content");
                             StartDate = documentSnapshot.getString("StartDate");
@@ -169,7 +172,7 @@ public class Screen extends AppCompatActivity {
                             img = documentSnapshot.getString("ImageURL");
 
                             // 게시글 정보 불러오고, user_id 바탕으로 nickname 가져오기.
-                            db.collection("user").document(user_id).get()
+                            db.collection("user").document(other_user_id).get()
                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -183,7 +186,7 @@ public class Screen extends AppCompatActivity {
                                             location_tv.setText(Location);
                                             StartDateTime_tv.setText(StartDateTime);
                                             EndDateTime_tv.setText(EndDateTime);
-
+                                            contents_tv.setText(Content);
 
                                             Picasso.get()
                                                     .load(img)
@@ -272,6 +275,14 @@ public class Screen extends AppCompatActivity {
             }
         });
 
+        enterProfile_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Screen.this, OtherPeoplePageActivity.class);
+                intent.putExtra("other_user_id", other_user_id);
+                startActivity(intent);
+            }
+        });
     }
 
     public void onStarClick(View view) {

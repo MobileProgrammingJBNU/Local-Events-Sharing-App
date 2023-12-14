@@ -147,6 +147,5 @@
                 android:textColor="#EEEEEE"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 </FrameLayout>

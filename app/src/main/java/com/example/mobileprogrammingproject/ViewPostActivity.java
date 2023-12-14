@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class ViewPostActivity extends AppCompatActivity {
 
     String user_id;
     String Title, PostID;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,15 @@ public class ViewPostActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         user_id = FirebaseAuth.getInstance().getUid();
+
+        intent = getIntent();
+
+        String other_user_id = intent.getStringExtra("other_user_id");
+        String new_title = "작성한 소식";
+        if(other_user_id!=null){
+            user_id = other_user_id; // 만약, 다른 사용자가 넘겨준 intent가 감지되었다면, 이 user_id로 접근할 것임.
+            toolbar.setTitle(new_title);
+        }
 
         //recyclerView 초기화
         recyclerView = findViewById(R.id.myPost_rv);
