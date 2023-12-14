@@ -70,9 +70,8 @@ public class WritingBoardActivity extends AppCompatActivity {
     private Uri imageUri;
 
     ImageView img_iv;
-    String img, post_id;
+    String img;
     ProgressBar progressBar;
-    FirebaseFirestore db;
     private final StorageReference reference = FirebaseStorage.getInstance().getReference();
     public static class Post {
         private String title;
@@ -245,7 +244,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         String endtime = endtimeTextView.getText().toString();
         String uid = FirebaseAuth.getInstance().getUid();
 
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> post = new HashMap<>();
         post.put("Title", title);
@@ -258,6 +257,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         post.put("StartTime", starttime);
         post.put("EndTime", endtime);
         post.put("UserID", uid);
+        //post.put("ImageURL", img);
 
         db.collection("posts")
                 .add(post)
@@ -267,7 +267,7 @@ public class WritingBoardActivity extends AppCompatActivity {
                         Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
                         // 성공적으로 추가된 경우 실행할 코드를 여기에 작성하세요.
                         Toast.makeText(getApplicationContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                        post_id = documentReference.getId(); // 생성된 post의 id
+                        String post_id = documentReference.getId(); // 생성된 post의 id
                         db.collection("posts")
                                 .document(post_id)
                                 .update("PostID", post_id)
@@ -275,14 +275,11 @@ public class WritingBoardActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void unused) {
                                         if(imageUri != null){
-                                            uploadToFirebase(imageUri); // 이미지 파이어베이스에
+                                            uploadToFirebase(imageUri); // 이미지 파이어베이스에 업로드
                                         }
                                         finish();
                                     }
                                 });
-                        Intent intent = new Intent(WritingBoardActivity.this, Screen.class);
-                        intent.putExtra("post_id", post_id);
-                        startActivity(intent); // 인텐트로 게시글 id를 screen으로 넘겨주는 코드
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -323,56 +320,40 @@ public class WritingBoardActivity extends AppCompatActivity {
 
     //파이어베이스 이미지 업로드
     private void uploadToFirebase(Uri uri) {
-
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri.toString()));
 
         fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        // 나중에 접근 가능한 uri를 db에 넣자!
+                        Log.d("이미지 파일 업로드 성공 !!", uri.toString());
 
-                fileRef.getDownloadUrl().
-                        addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                // 나중에 접근 가능한 uri를 db에 넣자!
-                                Log.d("스토리지에 이미지 파일 업로드 성공 !!", uri.toString());
+                        img = uri.toString();
 
-                                img = uri.toString();
+                        // uri를 img에 string으로 저장
+                        // 이후, uri를 포함하여 db에 insert
+                        // 프로그래스바 숨김
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(WritingBoardActivity.this, "업로드 성공", Toast.LENGTH_SHORT).show();
 
-                                db.collection("posts").document(post_id).update("ImageURL", img)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Log.d("파이어베이스 스토어에 이미지 파일 업로드 성공 !!", uri.toString());
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-
-                                            }
-                                        });
-
-                                // uri를 img에 string으로 저장
-                                // 이후, uri를 포함하여 db에 insert
-                                //프로그래스바 숨김
-
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(WritingBoardActivity.this, "업로드 성공", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
+                        // Firestore에 데이터 저장 메서드 호출
+                        savePostToFirestore();
+                    }
+                });
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                //프로그래스바 보여주기
+                // 프로그래스바 보여주기
                 progressBar.setVisibility(View.VISIBLE);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                //프로그래스바 숨김
+                // 프로그래스바 숨김
                 progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(WritingBoardActivity.this, "업로드 실패", Toast.LENGTH_SHORT).show();
             }
