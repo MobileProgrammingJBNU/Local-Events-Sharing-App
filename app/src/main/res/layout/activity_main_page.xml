@@ -12,6 +12,16 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <ImageView
+            android:id="@+id/btnMoveToMyLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="20dp"
+            android:elevation="10dp"
+            android:background="@drawable/circle_background"
+            app:srcCompat="@drawable/aim" />
     </FrameLayout>
 
     <!-- 하단 네비게이션 -->

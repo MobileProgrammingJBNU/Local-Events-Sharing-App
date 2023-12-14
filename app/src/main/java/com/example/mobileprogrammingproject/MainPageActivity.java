@@ -27,6 +27,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import android.location.Location;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -49,6 +55,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,15 +68,38 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
     private BottomNavigationView bottomNavigationView;
     private Button btnWritePost;
     private Throwable e;
-    private Button btnMoveToMyLocation;
+    private ImageView btnMoveToMyLocation;
 
     private TextView tvLocationName;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+
+    double set_lat, set_long;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    Log.d("Location Update", "Latitude: " + latitude + ", Longitude: " + longitude);
+
+                    // 여기서 위도(latitude)와 경도(longitude)를 사용할 수 있습니다.
+                }
+            }
+        };
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
@@ -107,6 +137,37 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
 
         //하단 네비게이션
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        //temp 버튼
+        btnMoveToMyLocation = findViewById(R.id.btnMoveToMyLocation);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(1000); // 1초마다 위치 업데이트
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null) {
+                    Location location = locationResult.getLastLocation();
+                    if (location != null) {
+                        set_lat = location.getLatitude();
+                        set_long = location.getLongitude();
+                        // 여기에서 위도와 경도를 사용하면 됩니다.
+                    }
+                }
+            }
+        };
+
+        requestLocationPermission();
+        btnMoveToMyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapPoint mapPoint = MapPoint.mapPointWithGeoCoord(set_lat, set_long);
+                mapView.setMapCenterPoint(mapPoint, true);
+            }
+        });
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -147,6 +208,56 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
                 return false;
             }
         });
+
+    }
+
+    private void requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            // 이미 권한이 허용되어 있으면 위치 업데이트를 시작합니다.
+            startLocationUpdates();
+        } else {
+            // 권한이 없으면 권한 요청
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE
+            );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 허용되면 위치 업데이트를 시작합니다.
+                startLocationUpdates();
+            } else {
+                Toast.makeText(this, "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        } else {
+            // 권한이 없으면 권한 요청
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE
+            );
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 액티비티가 중지되면 위치 업데이트 중지
+        fusedLocationClient.removeLocationUpdates(locationCallback);
     }
 
 
