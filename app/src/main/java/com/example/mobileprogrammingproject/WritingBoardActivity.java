@@ -72,6 +72,8 @@ public class WritingBoardActivity extends AppCompatActivity {
     ImageView img_iv;
     String img;
     ProgressBar progressBar;
+    FirebaseFirestore db;
+    String post_id;
     private final StorageReference reference = FirebaseStorage.getInstance().getReference();
     public static class Post {
         private String title;
@@ -244,7 +246,7 @@ public class WritingBoardActivity extends AppCompatActivity {
         String endtime = endtimeTextView.getText().toString();
         String uid = FirebaseAuth.getInstance().getUid();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         Map<String, Object> post = new HashMap<>();
         post.put("Title", title);
@@ -267,7 +269,7 @@ public class WritingBoardActivity extends AppCompatActivity {
                         Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
                         // 성공적으로 추가된 경우 실행할 코드를 여기에 작성하세요.
                         Toast.makeText(getApplicationContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                        String post_id = documentReference.getId(); // 생성된 post의 id
+                        post_id = documentReference.getId(); // 생성된 post의 id
                         db.collection("posts")
                                 .document(post_id)
                                 .update("PostID", post_id)
@@ -331,7 +333,23 @@ public class WritingBoardActivity extends AppCompatActivity {
                         // 나중에 접근 가능한 uri를 db에 넣자!
                         Log.d("이미지 파일 업로드 성공 !!", uri.toString());
 
+
                         img = uri.toString();
+
+
+                        db.collection("posts").document(post_id).update("ImageURL", img)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d("파이어베이스 스토어에 이미지 파일 업로드 성공 !!", uri.toString());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
 
                         // uri를 img에 string으로 저장
                         // 이후, uri를 포함하여 db에 insert
@@ -339,8 +357,6 @@ public class WritingBoardActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(WritingBoardActivity.this, "업로드 성공", Toast.LENGTH_SHORT).show();
 
-                        // Firestore에 데이터 저장 메서드 호출
-                        savePostToFirestore();
                     }
                 });
             }
