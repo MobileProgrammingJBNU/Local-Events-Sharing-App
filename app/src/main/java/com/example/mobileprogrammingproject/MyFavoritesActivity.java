@@ -54,7 +54,6 @@ public class MyFavoritesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.favorites_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         db.collection("favorites").whereEqualTo("UserID", user_id).get() // 사용자가 작성한 post 가져오기
 
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
