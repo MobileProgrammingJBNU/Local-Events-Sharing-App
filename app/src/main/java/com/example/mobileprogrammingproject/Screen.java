@@ -296,19 +296,26 @@ public class Screen extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+    private String getCurrentUserID() {
+        return FirebaseAuth.getInstance().getUid();
+    }
+
     private void addToFavorites() {
 
-        if (user_id != null) {
+        String currentUserId = getCurrentUserID();
+
+        if (currentUserId != null) {
             // 현재 사용자가 로그인되어 있을 때만 실행
             String PostID = post_id; // 게시글의 고유 아이디
 
             // "favorites" 컬렉션에 즐겨찾기 정보 추가
             CollectionReference favoritesCollection = db.collection("favorites");
-            DocumentReference documentReference = favoritesCollection.document(user_id + "_" + post_id);
+            DocumentReference documentReference = favoritesCollection.document(currentUserId + "_" + post_id);
 
             Map<String, String> favoritesData = new HashMap<>();
             favoritesData.put("PostID", post_id);
-            favoritesData.put("UserID", user_id);
+            favoritesData.put("UserID", currentUserId);
 
             // 즐겨찾기 정보 추가
             documentReference.set(favoritesData)
@@ -317,15 +324,16 @@ public class Screen extends AppCompatActivity {
         }
     }
     private void removeFromFavorites() {
-        String uid = FirebaseAuth.getInstance().getUid();
 
-        if (uid != null) {
+        String currentUserId = getCurrentUserID();
+
+        if (currentUserId != null) {
             // 현재 사용자가 로그인되어 있을 때만 실행
             String PostID = post_id; // 게시글의 고유 아이디
 
             // "favorites" 컬렉션에서 즐겨찾기 정보 삭제
             CollectionReference favoritesCollection = db.collection("favorites");
-            DocumentReference documentReference = favoritesCollection.document(uid + "_" + post_id);
+            DocumentReference documentReference = favoritesCollection.document(currentUserId + "_" + post_id);
 
             // 즐겨찾기 정보 삭제
             documentReference.delete()
@@ -341,9 +349,9 @@ public class Screen extends AppCompatActivity {
 
     private void checkFavoriteStatus() {
         // "favorites" 컬렉션에서 해당 게시글이 존재하는지 확인
-        String uid = FirebaseAuth.getInstance().getUid();
-        if (uid != null) {
-            DocumentReference favoriteDocRef = db.collection("favorites").document(uid + "_" + post_id);
+        String currentUserId = getCurrentUserID();
+        if (currentUserId != null) {
+            DocumentReference favoriteDocRef = db.collection("favorites").document(currentUserId + "_" + post_id);
             favoriteDocRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
