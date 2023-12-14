@@ -387,61 +387,7 @@ public class MainPageActivity extends AppCompatActivity implements MapView.Curre
         // ...
     }
 
-        /*
-        @Override
-        protected void onResume() {
-            super.onResume();
+    public void printLatLong(){
 
-            btnWritePost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // "게시물 작성" 버튼이 클릭되었을 때 실행되는 부분
-
-                    // AlertDialog를 통해 확인 다이얼로그 표시
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainPageActivity.this);
-                    builder.setMessage("이 주소로 설정");
-
-                    // 확인 버튼 클릭 시의 동작 정의
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // "확인" 버튼이 클릭되었을 때 실행되는 부분
-
-                            // 마커의 위치 정보 가져오기
-                            if (marker != null) {
-                                MapPoint markerMapPoint = marker.getMapPoint();
-                                double markerLatitude = markerMapPoint.getMapPointGeoCoord().latitude;
-                                double markerLongitude = markerMapPoint.getMapPointGeoCoord().longitude;
-
-                                // 역 지오코딩을 통해 주소(장소명) 가져오기
-                                String locationName = getAddressFromCoordinates(markerLatitude, markerLongitude);
-
-                                // Intent를 사용하여 WritingBoardActivity로 전환하면서 마커 위치 정보 및 주소(장소명) 전달
-                                Intent intent = new Intent(MainPageActivity.this, WritingBoardActivity.class);
-                                intent.putExtra("markerLatitude", markerLatitude);
-                                intent.putExtra("markerLongitude", markerLongitude);
-                                intent.putExtra("locationName", locationName);
-
-                                startActivity(intent);
-                            } else {
-                                // 마커가 없을 경우 처리 (예: 에러 메시지 표시 등)
-                                Toast.makeText(MainPageActivity.this, "마커를 먼저 찍어주세요.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-
-
-                    // 취소 버튼 클릭 시의 동작 정의
-                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-
-                    // AlertDialog 생성 및 표시
-                    builder.create().show();
-                }
-            });
-        }*/
-
+    }
 }
