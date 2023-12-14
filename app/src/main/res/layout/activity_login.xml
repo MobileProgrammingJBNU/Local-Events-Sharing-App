@@ -11,9 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="200dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="30dp"
         android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
@@ -58,6 +57,12 @@
             android:padding="5dp"
             android:inputType="textPassword" />
 
+        <CheckBox
+            android:id="@+id/id_save"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:text="로그인 정보 기억하기" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginbutton"
             android:layout_width="300dp"
@@ -80,6 +85,7 @@
             android:textColor="#00ADB5"
             android:textSize="15dp"
             android:textStyle="bold" />
+
 
     </LinearLayout>
 </FrameLayout>

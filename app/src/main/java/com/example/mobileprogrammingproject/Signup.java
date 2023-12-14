@@ -103,6 +103,12 @@ public class Signup extends AppCompatActivity {
                 String pw2 = pw2_et.getText().toString(); // 두 번째 비밀번호 입력값
                 nickname = nickname_et.getText().toString();
 
+                // 비밀번호 길이 확인
+                if(pw.length() <= 6) {
+                    Toast.makeText(Signup.this, "비밀번호가 6자리 이하입니다.", Toast.LENGTH_LONG).show();
+                    return; // 비밀번호 길이가 짧을 경우 함수 종료
+                }
+
                 if(!pw.equals(pw2)) {
                     Toast.makeText(Signup.this, "비밀번호가 다릅니다.", Toast.LENGTH_LONG).show();
                     return; // 비밀번호가 다를 경우 함수 종료
